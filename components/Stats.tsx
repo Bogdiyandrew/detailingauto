@@ -4,14 +4,14 @@ import { Car, ShieldCheck, Star } from 'lucide-react';
 
 const statsData = [
   {
-    icon: <Car size={40} className="mb-4 text-brand-accent" />,
-    value: "+200",
-    label: "Autoturisme Igienizate",
-  },
-  {
     icon: <ShieldCheck size={40} className="mb-4 text-brand-accent" />,
     value: "Produse Profesionale",
     label: "Folosim doar soluții de top, sigure pentru mașina ta.",
+  },
+  {
+    icon: <Car size={40} className="mb-4 text-brand-accent" />,
+    value: "+200",
+    label: "Autoturisme Igienizate",
   },
   {
     icon: <Star size={40} className="mb-4 text-brand-accent" />,
@@ -24,8 +24,19 @@ const Stats = () => {
   return (
     <section id="stats" className="bg-slate-100 py-20 sm:py-24 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Card */}
         <div className="relative overflow-hidden rounded-3xl bg-white shadow-2xl">
-          <div className="px-6 py-16 text-center sm:px-16 relative z-10">
+          
+          {/* Glow subtil */}
+          <div
+            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            <div className="h-64 w-64 rounded-full bg-blue-400 opacity-25 blur-[80px]" />
+          </div>
+
+          {/* Conținutul */}
+          <div className="relative z-10 px-6 py-16 text-center sm:px-16">
             <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
               {statsData.map((stat, index) => (
                 <div key={index} className="flex flex-col items-center justify-center">
@@ -41,24 +52,6 @@ const Stats = () => {
             </div>
           </div>
 
-          {/* Cerc albastru blurat în fundal */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-400 opacity-40 blur-3xl"
-            aria-hidden="true"
-          />
-
-          {/* Glow decorativ extra */}
-          <div
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-20 -translate-x-1/2 -translate-y-1/2 transform-gpu blur-3xl"
-            aria-hidden="true"
-          >
-            <div
-              className="aspect-[1155/678] w-[50rem] bg-gradient-to-tr from-[#00bfff] to-[#90e0ef] opacity-20"
-              style={{
-                clipPath: 'circle(50% at 50% 50%)',
-              }}
-            />
-          </div>
         </div>
       </div>
     </section>
