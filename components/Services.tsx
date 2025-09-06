@@ -1,7 +1,8 @@
 'use client'; 
+
 import { Check } from 'lucide-react';
-import Link from 'next/link';
-import { motion } from 'framer-motion'; 
+// Am scos importul pentru Link, deoarece îl înlocuim cu <a>
+import { motion } from 'framer-motion';
 
 const servicesData = [
   {
@@ -66,7 +67,7 @@ const Services = () => {
           {servicesData.map((service, index) => (
             <motion.div
               key={index}
-              className={`rounded-3xl p-8 ring-1 xl:p-10 ${
+              className={`rounded-3xl p-8 ring-1 xl:p-10 flex flex-col ${
                 service.isFeatured
                   ? 'bg-white/5 ring-brand-accent'
                   : 'ring-white/10'
@@ -77,25 +78,30 @@ const Services = () => {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <h3 className={`text-lg font-semibold leading-8 ${service.isFeatured ? 'text-brand-accent' : 'text-white'}`}>
-                {service.title}
-              </h3>
-              <p className="mt-4 text-sm leading-6 text-brand-gray">{service.subtitle}</p>
-              <p className="mt-6 flex items-baseline gap-x-1">
-                <span className="text-sm font-semibold leading-6 text-brand-gray mr-1">De la</span>
-                <span className="text-4xl font-bold tracking-tight text-white">{service.price}</span>
-                <span className="text-sm font-semibold leading-6 text-brand-gray">RON</span>
-              </p>
-              <Link
-                href="/#contact"
-                className={`mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              <div className="flex-grow">
+                <h3 className={`text-lg font-semibold leading-8 ${service.isFeatured ? 'text-brand-accent' : 'text-white'}`}>
+                  {service.title}
+                </h3>
+                <p className="mt-4 text-sm leading-6 text-brand-gray">{service.subtitle}</p>
+                <p className="mt-6 flex items-baseline gap-x-1">
+                  <span className="text-sm font-semibold leading-6 text-brand-gray mr-1">De la</span>
+                  <span className="text-4xl font-bold tracking-tight text-white">{service.price}</span>
+                  <span className="text-sm font-semibold leading-6 text-brand-gray">RON</span>
+                </p>
+              </div>
+              
+              {/* === MODIFICAREA ESTE AICI: Am înlocuit <Link> cu <a> === */}
+              <a
+                href={`#contact?service=${encodeURIComponent(service.title)}`}
+                className={`mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
                   service.isFeatured
                     ? 'bg-brand-accent text-white shadow-sm hover:bg-sky-400 focus-visible:outline-brand-accent'
                     : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
                 }`}
               >
                 Alege Pachetul
-              </Link>
+              </a>
+              
               <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-brand-gray xl:mt-10">
                 {service.features.map((feature) => (
                   <li key={feature} className="flex gap-x-3">
