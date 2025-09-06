@@ -29,7 +29,7 @@ const Header = () => {
         <div className="mx-auto flex max-w-7xl items-center justify-between p-4 text-white">
           {/* Logo - Am adăugat onClick */}
           <Link href="#" className="text-xl font-bold tracking-wider" onClick={handleLogoClick}>
-            DIAMOND <span className="text-brand-accent">DETAILING</span>
+            DIAMOND <span className="text-brand-accent">DETAILING(+logo)</span>
           </Link>
 
           {/* Navigație Desktop */}
