@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Lightbox from './Lightbox';
-import { useLockBodyScroll } from '@/hooks/useLockBodyScroll'; // 1. Import the new hook
+import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
 
 const beforeAfterImages = [
   {
@@ -23,8 +23,6 @@ const beforeAfterImages = [
 
 const BeforeAfter = () => {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
-
-  // 2. Use the hook. It will lock the body scroll whenever lightboxImage is not null.
   useLockBodyScroll(!!lightboxImage);
 
   return (
@@ -45,8 +43,11 @@ const BeforeAfter = () => {
             {beforeAfterImages.map((item, index) => (
               <div key={index} className="flex flex-col rounded-xl overflow-hidden shadow-lg border border-brand-gray/10 bg-white">
                 <div className="grid grid-cols-1 sm:grid-cols-2">
+                  
+                  {/* === MODIFICAREA ESTE AICI === */}
+                  {/* Imaginea "Înainte" cu o bordură la dreapta pe ecrane sm+ */}
                   <div 
-                    className="relative aspect-square cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2" 
+                    className="relative aspect-square cursor-pointer sm:border-r-2 sm:border-brand-light" 
                     onClick={() => setLightboxImage(item.before)}
                     onKeyDown={(e) => e.key === 'Enter' && setLightboxImage(item.before)}
                     tabIndex={0}
@@ -56,7 +57,7 @@ const BeforeAfter = () => {
                   </div>
 
                   <div 
-                    className="relative aspect-square cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2" 
+                    className="relative aspect-square cursor-pointer" 
                     onClick={() => setLightboxImage(item.after)}
                     onKeyDown={(e) => e.key === 'Enter' && setLightboxImage(item.after)}
                     tabIndex={0}
@@ -64,6 +65,7 @@ const BeforeAfter = () => {
                     <Image src={item.after} alt={`${item.alt} - După`} fill className="object-cover" />
                     <div className="absolute top-2 left-2 bg-brand-accent text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded">După</div>
                   </div>
+
                 </div>
                 <div className="p-6 flex-grow">
                   <p className="text-lg font-semibold leading-7 text-brand-dark">{item.description}</p>
