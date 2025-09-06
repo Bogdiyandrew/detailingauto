@@ -24,9 +24,9 @@ const Stats = () => {
   return (
     <section id="stats" className="bg-slate-100 py-20 sm:py-24 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* Container exterior care aplică umbra și are colțuri rotunjite */}
+        {/* contaienr exterior care aplică umbra si are colturi rotunjite */}
         <div className="relative rounded-3xl shadow-2xl">
-          {/* Container interior care taie perfect conținutul și are propriile colțuri rotunjite */}
+          {/* container interior care taie perfect continut si are propriile colturi rotunjite */}
           <div className="relative isolate overflow-hidden bg-white rounded-3xl">
             <div className="px-6 py-16 text-center sm:px-16">
               <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
@@ -44,7 +44,7 @@ const Stats = () => {
               </div>
             </div>
           </div>
-          {/* Elementul decorativ de fundal, care va fi tăiat corect */}
+          {/* element decorativ de fundal */}
           <div
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 transform-gpu blur-3xl"
             aria-hidden="true"

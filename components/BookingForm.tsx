@@ -34,11 +34,11 @@ const BookingForm = () => {
     // Simulare trimitere date (înlocuiește cu un apel API real)
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Aici poți adăuga logica de trimitere a email-ului sau salvare în BD
-    // De exemplu, folosind un API route.
+    // aici  adaugam logica de trimitere a email-ului sau salvare in BD
+    // ex  folosind un api route.
 
     setIsSubmitting(false);
-    setSubmissionStatus('success'); // Schimbă în 'error' pentru a testa mesajul de eroare
+    setSubmissionStatus('success'); // schimba în error pentru a testa mesajul de eroare
   };
 
   const renderStep = () => {

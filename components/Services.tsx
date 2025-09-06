@@ -1,8 +1,7 @@
-'use client'; // Framer Motion necesită 'use client'
-
+'use client'; 
 import { Check } from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion'; // Importăm 'motion'
+import { motion } from 'framer-motion'; 
 
 const servicesData = [
   {
@@ -45,7 +44,6 @@ const servicesData = [
 ];
 
 const Services = () => {
-  // Definim variantele de animație
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },

@@ -1,7 +1,5 @@
-// app/components/Contact.tsx
 import { Phone, Mail, MapPin } from 'lucide-react';
-import BookingForm from './BookingForm'; // Importăm noua componentă
-
+import BookingForm from './BookingForm'; 
 const Contact = () => {
   return (
     <section id="contact" className="bg-brand-light py-20 sm:py-24">
@@ -18,12 +16,10 @@ const Contact = () => {
 
         <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-2">
           
-          {/* Coloana 1: Formularul de Programare */}
           <div className="w-full">
             <BookingForm />
           </div>
 
-          {/* Coloana 2: Informații de contact și hartă */}
           <div className="w-full space-y-8 lg:pt-8">
              <div className="space-y-6">
               <div className="flex gap-x-4">

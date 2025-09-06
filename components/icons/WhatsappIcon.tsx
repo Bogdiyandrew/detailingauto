@@ -1,4 +1,3 @@
-// app/components/icons/WhatsappIcon.tsx
 import React from 'react';
 
 const WhatsappIcon = ({ className }: { className?: string }) => {

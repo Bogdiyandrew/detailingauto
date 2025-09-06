@@ -1,4 +1,3 @@
-// app/components/Testimonials.tsx
 import { Star } from 'lucide-react';
 
 const testimonialsData = [
@@ -21,8 +20,6 @@ const testimonialsData = [
 
 const Testimonials = () => {
   return (
-    // === CORECȚIA ESTE AICI ===
-    // Am adăugat spațiu între className și id
     <section id="recenzii" className="bg-brand-dark py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">

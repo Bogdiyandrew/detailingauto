@@ -22,16 +22,15 @@ const Header = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // --- MODIFICAREA ESTE AICI ---
   const menuVariants = {
     hidden: { x: '100%' },
     visible: { 
       x: 0, 
-      transition: { type: 'spring', stiffness: 300, damping: 30 } as const // Am adăugat 'as const'
+      transition: { type: 'spring', stiffness: 300, damping: 30 } as const 
     },
     exit: { 
       x: '100%', 
-      transition: { type: 'spring', stiffness: 300, damping: 30 } as const // Am adăugat 'as const'
+      transition: { type: 'spring', stiffness: 300, damping: 30 } as const 
     },
   };
 
@@ -40,7 +39,7 @@ const Header = () => {
       <header className="sticky top-0 z-50 w-full bg-brand-dark/80 backdrop-blur-lg">
         <div className="mx-auto flex max-w-7xl items-center justify-between p-4 text-white">
           <Link href="#" className="text-xl font-bold tracking-wider rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent" onClick={handleLogoClick}>
-            DIAMOND <span className="text-brand-accent">DETAILING</span>
+            DIAMOND <span className="text-brand-accent">DETAILING(+logo)</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
@@ -85,7 +84,7 @@ const Header = () => {
             />
             
             <motion.div
-              key="mobile-menu" // Added key for AnimatePresence
+              key="mobile-menu" 
               variants={menuVariants}
               initial="hidden"
               animate="visible"
