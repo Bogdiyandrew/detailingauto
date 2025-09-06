@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const Hero = () => {
-  // Variantele de animație pentru text, cu 'as const' pentru a fixa tipurile
+
   const textVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
@@ -15,7 +15,6 @@ const Hero = () => {
     },
   };
 
-  // Variantele de animație pentru buton, cu 'as const'
   const buttonVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
@@ -47,10 +46,8 @@ const Hero = () => {
         quality={80}
       />
 
-      {/* Overlay întunecat pentru lizibilitate (Metoda Corectă) */}
       <div className="absolute inset-0 bg-black/60" />
 
-      {/* Container pentru conținutul animat */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 pb-20">
         <motion.h1 
           className="mb-4 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl"
@@ -85,7 +82,6 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Separator unghiular la baza secțiunii */}
       <div className="absolute inset-x-0 bottom-0 h-24">
         <svg
           className="h-full w-full"

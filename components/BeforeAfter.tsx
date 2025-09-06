@@ -1,8 +1,10 @@
+// app/components/BeforeAfter.tsx
 'use client';
 
 import { useState } from 'react';
 import Image from 'next/image';
 import Lightbox from './Lightbox';
+import { useLockBodyScroll } from '@/hooks/useLockBodyScroll'; // 1. Import the new hook
 
 const beforeAfterImages = [
   {
@@ -22,6 +24,9 @@ const beforeAfterImages = [
 const BeforeAfter = () => {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
+  // 2. Use the hook. It will lock the body scroll whenever lightboxImage is not null.
+  useLockBodyScroll(!!lightboxImage);
+
   return (
     <>
       <section id="galerie" className="bg-brand-light py-20 sm:py-24">
@@ -40,7 +45,6 @@ const BeforeAfter = () => {
             {beforeAfterImages.map((item, index) => (
               <div key={index} className="flex flex-col rounded-xl overflow-hidden shadow-lg border border-brand-gray/10 bg-white">
                 <div className="grid grid-cols-1 sm:grid-cols-2">
-                  
                   <div 
                     className="relative aspect-square cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2" 
                     onClick={() => setLightboxImage(item.before)}
@@ -60,7 +64,6 @@ const BeforeAfter = () => {
                     <Image src={item.after} alt={`${item.alt} - După`} fill className="object-cover" />
                     <div className="absolute top-2 left-2 bg-brand-accent text-white text-xs font-bold uppercase tracking-wider px-2 py-1 rounded">După</div>
                   </div>
-
                 </div>
                 <div className="p-6 flex-grow">
                   <p className="text-lg font-semibold leading-7 text-brand-dark">{item.description}</p>
