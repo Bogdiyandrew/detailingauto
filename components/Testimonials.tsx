@@ -2,18 +2,18 @@ import { Star } from 'lucide-react';
 
 const testimonialsData = [
   {
-    name: 'Vlad C.',
-    text: 'Un detailing de nota 100. Profesionalism, produse de foarte mare calitate, punctualitate. Nu mă așteptam să iasă atât de bine!',
+    name: 'nume 1',
+    text: 'recenzie reala',
     rating: 5,
   },
   {
-    name: 'Georgiana M.',
-    text: 'După detailingul complet efectuat am retrăit același sentiment ca atunci când mașina era nouă! Recomand cu încredere!',
+    name: 'nume 2',
+    text: 'recenzie reala',
     rating: 5,
   },
   {
-    name: 'Iulian G.',
-    text: 'Am fost foarte mulțumit de serviciile oferite. Înainte să ajung la ei mașina arăta jalnic, dupa serviciul complet de detailing masina arata ca noua.',
+    name: 'nume 3',
+    text: 'recenzie reala',
     rating: 5,
   },
 ];
