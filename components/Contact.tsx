@@ -49,7 +49,7 @@ const Contact = () => {
             </div>
             
             <div className="w-full h-64 rounded-xl bg-brand-gray/20 flex items-center justify-center">
-              <p className="text-brand-gray">Harta Google Maps va fi integrată aici</p>
+              <p className="text-brand-gray">Harta Maps</p>
             </div>
           </div>
 
