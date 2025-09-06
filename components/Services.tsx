@@ -11,9 +11,9 @@ const servicesData = [
     price: '350',
     features: [
       'Detailing interior complet',
-      'Curățare zonă chedere și balamale',
-      'Igienizare profesională',
-      'Finisaj impecabil pentru plastice și tapițerie',
+      'info2',
+      'info3',
+      'info4',
     ],
     isFeatured: false,
   },
@@ -24,9 +24,9 @@ const servicesData = [
     features: [
       'Detailing interior și exterior complet',
       'Polish exterior profesional',
-      'Curățare compartiment motor, jante, carenaje',
-      'Tratament ceramic cu garanție 2 ani',
-      'Desfundare canale scurgere trapă',
+      'info3',
+      'info4',
+      'info5',
     ],
     isFeatured: true,
   },
@@ -35,10 +35,10 @@ const servicesData = [
     subtitle: 'Luciu Spectaculos și Protecție Durabilă',
     price: '700',
     features: [
-      'Polish exterior pentru corecția vopselei',
-      'Aplicare tratament ceramic profesional',
-      'Garanție de 2 ani pentru protecție',
-      'Efect hidrofob și rezistență la zgârieturi fine',
+      'info1',
+      'info2',
+      '3',
+      '4',
     ],
     isFeatured: false,
   },
@@ -52,30 +52,15 @@ const Services = () => {
   };
 
   const handleSelectPackage = (serviceTitle: string) => {
-    // Opțiunea 1: Dacă vrei să rămâi pe aceeași pagină cu ancoră
     const contactSection = document.getElementById('contact');
     
-    // Actualizăm URL-ul cu parametrul service
     const newUrl = `${window.location.pathname}#contact?service=${encodeURIComponent(serviceTitle)}`;
     window.history.pushState({}, '', newUrl);
 
-    // Facem scroll la secțiunea de contact
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // Opțiunea 2: Dacă vrei să navighezi la o pagină separată de booking
-    // router.push(`/booking?service=${encodeURIComponent(serviceTitle)}`);
-    
-    // Opțiunea 3: Dacă BookingForm este pe aceeași pagină dar nu în secțiunea contact
-    // const bookingSection = document.getElementById('booking');
-    // const newUrl = `${window.location.pathname}#booking?service=${encodeURIComponent(serviceTitle)}`;
-    // window.history.pushState({}, '', newUrl);
-    // if (bookingSection) {
-    //   bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // }
-
-    // Declanșăm un eveniment custom pentru a notifica BookingForm despre schimbarea serviciului
     window.dispatchEvent(new CustomEvent('serviceSelected', { 
       detail: { service: serviceTitle } 
     }));
@@ -94,13 +79,15 @@ const Services = () => {
           Indiferent de starea mașinii, avem un pachet care îi va reda strălucirea și o va proteja pe termen lung.
         </p>
 
-        <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <div className="isolate mx-auto mt-20 grid max-w-md grid-cols-1 gap-y-16 gap-x-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {servicesData.map((service, index) => (
             <motion.div
               key={index}
-              className={`rounded-3xl p-8 ring-1 xl:p-10 flex flex-col ${
+              // MODIFICARE: Am adăugat gap-y-6 aici pentru spațiere între elementele directe ale cardului
+              // Am setat p-8 pentru un padding consistent în jurul conținutului
+              className={`rounded-3xl p-8 ring-1 flex flex-col h-full transition-transform duration-300 gap-y-6 ${
                 service.isFeatured
-                  ? 'bg-white/5 ring-brand-accent'
+                  ? 'bg-white/5 ring-brand-accent lg:-translate-y-8'
                   : 'ring-white/10'
               }`}
               variants={cardVariants}
@@ -109,7 +96,7 @@ const Services = () => {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className="flex-grow">
+              <div>
                 <h3 className={`text-lg font-semibold leading-8 ${service.isFeatured ? 'text-brand-accent' : 'text-white'}`}>
                   {service.title}
                 </h3>
@@ -121,18 +108,8 @@ const Services = () => {
                 </p>
               </div>
               
-              <button
-                onClick={() => handleSelectPackage(service.title)}
-                className={`mt-8 w-full rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                  service.isFeatured
-                    ? 'bg-brand-accent text-white shadow-sm hover:bg-sky-400 focus-visible:outline-brand-accent'
-                    : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
-                }`}
-              >
-                Alege Pachetul
-              </button>
-              
-              <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-brand-gray xl:mt-10">
+              {/* MODIFICARE: Eliminat mt-8 de aici pentru că gap-y de pe părinte preia controlul */}
+              <ul role="list" className="space-y-3 text-sm leading-6 text-brand-gray flex-grow"> 
                 {service.features.map((feature) => (
                   <li key={feature} className="flex gap-x-3">
                     <Check className="h-6 w-5 flex-none text-brand-accent" aria-hidden="true" />
@@ -140,6 +117,19 @@ const Services = () => {
                   </li>
                 ))}
               </ul>
+
+              {/* MODIFICARE: Eliminat mt-auto și mt-8. Butonul se va alinia jos automat în flex-col
+                         și gap-y-6 (de pe părinte) îi va da spațiu deasupra. */}
+              <button
+                onClick={() => handleSelectPackage(service.title)}
+                className={`w-full rounded-md py-2.5 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 cursor-pointer ${
+                  service.isFeatured
+                    ? 'bg-brand-accent text-white shadow-sm hover:bg-sky-400 focus-visible:outline-brand-accent'
+                    : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
+                }`}
+              >
+                Alege Pachetul
+              </button>
             </motion.div>
           ))}
         </div>

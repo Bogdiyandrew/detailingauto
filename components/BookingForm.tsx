@@ -52,6 +52,7 @@ const BookingFormContent = () => {
       const isValidService = services.some(s => s.name === serviceFromAnyUrl);
       if (isValidService) {
         setSelectedService(serviceFromAnyUrl);
+        setSelectedDate(new Date()); // Setează automat data curentă
         setStep(2);
       }
     } else {
@@ -68,6 +69,7 @@ const BookingFormContent = () => {
       
       if (isValidService) {
         setSelectedService(serviceName);
+        setSelectedDate(new Date()); // Setează automat data curentă
         setStep(2);
       }
     };
@@ -88,6 +90,7 @@ const BookingFormContent = () => {
         const isValidService = services.some(s => s.name === serviceFromHash);
         if (isValidService) {
           setSelectedService(serviceFromHash);
+          setSelectedDate(new Date()); // Setează automat data curentă
           setStep(2);
         }
       }
@@ -146,6 +149,7 @@ const BookingFormContent = () => {
                 key={service.id}
                 onClick={() => {
                   setSelectedService(service.name);
+                  setSelectedDate(new Date()); // Setează automat data curentă
                   setStep(2);
                 }}
                 className="flex items-center gap-4 p-4 border rounded-lg text-left hover:bg-brand-accent/10 hover:border-brand-accent transition-all cursor-pointer"
@@ -161,45 +165,51 @@ const BookingFormContent = () => {
       {step === 2 && (
         <div>
           <h3 className="text-lg font-semibold text-brand-dark mb-4">Pasul 2: Alege data și ora</h3>
-          <p className="text-sm text-brand-gray -mt-2 mb-4">Serviciu selectat: <strong>{selectedService}</strong></p>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="flex justify-center">
-              <DayPicker
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                locale={ro}
-                fromDate={new Date()}
-                styles={{
-                  head_cell: { width: '40px' },
-                  caption_label: { fontSize: '1.1rem', fontWeight: 'bold' },
-                }}
-              />
-            </div>
-            {selectedDate && (
-              <div className="flex flex-col">
-                <h4 className="font-semibold mb-2">Ore disponibile pentru {format(selectedDate, 'PPP', { locale: ro })}:</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {availableTimes.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      className={`p-2 border rounded-md text-center transition-colors cursor-pointer ${
-                        selectedTime === time ? 'bg-brand-accent text-white border-brand-accent' : 'hover:border-brand-accent'
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
+          <p className="text-sm text-brand-gray -mt-2 mb-4">Serviciu selectat: <strong className="text-brand-accent">{selectedService}</strong></p>          <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
+            <div className="flex justify-center booking-calendar">
+              <div className="w-full max-w-sm">
+                <DayPicker
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  locale={ro}
+                  fromDate={new Date()}
+                  styles={{
+                    head_cell: { width: '40px' },
+                    caption_label: { fontSize: '1.1rem', fontWeight: 'bold' },
+                    caption: { textAlign: 'center', marginBottom: '1rem' },
+                    table: { margin: '0 auto', width: '100%' },
+                    head: { textAlign: 'center' },
+                  }}
+                  className="mx-auto w-full"
+                />
               </div>
-            )}
+            </div>
+            <div className="flex flex-col mt-4 md:mt-0">
+              <h4 className="font-semibold mb-4">
+                Ore disponibile pentru {format(selectedDate || new Date(), 'PPP', { locale: ro })}:
+              </h4>
+              <div className="grid grid-cols-2 gap-3 max-w-xs">
+                {availableTimes.map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setSelectedTime(time)}
+                    className={`p-3 border rounded-md text-center transition-colors cursor-pointer text-sm font-medium ${
+                      selectedTime === time ? 'bg-brand-accent text-white border-brand-accent' : 'hover:border-brand-accent'
+                    }`}
+                  >
+                    {time}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="flex justify-between mt-6">
             <button 
               onClick={() => { 
                 setStep(1); 
                 setSelectedService(null);
+                setSelectedDate(undefined);
                 window.history.pushState({}, '', window.location.pathname); 
               }} 
               className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer"
