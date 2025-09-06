@@ -1,26 +1,22 @@
+/* app/globals.css */
+
+/* Importăm toate utilitățile de bază din Tailwind */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Aici definim "creierul" temei noastre personalizate.
+   Tailwind v4 va citi aceste variabile și va genera automat 
+   clase precum bg-brand-dark, text-brand-accent, font-sans, etc. */
+@theme {
+  --color-brand-dark: #1a1a1a;
+  --color-brand-gray: #a8a8a8;
+  --color-brand-light: #f5f5f5;
+  --color-brand-accent: #00bfff; /* Deep Sky Blue */
+
+  /* Definirea fonturilor */
+  --font-sans: 'Poppins', sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Stiluri de bază pentru a ne asigura că fontul este aplicat corect */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
