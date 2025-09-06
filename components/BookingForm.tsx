@@ -16,7 +16,6 @@ const services = [
 
 const availableTimes = ['09:00', '11:00', '13:00', '15:00', '17:00'];
 
-// Componenta internă cu toată logica
 const BookingFormContent = () => {
   const searchParams = useSearchParams();
   const serviceFromUrl = searchParams.get('service');
@@ -24,7 +23,7 @@ const BookingFormContent = () => {
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null); // Variabila care lipsea
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -34,16 +33,13 @@ const BookingFormContent = () => {
       if (isValidService) {
         setSelectedService(serviceFromUrl);
         setStep(2);
-        
-        const contactSection = document.getElementById('contact');
-        if (contactSection) {
-          contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
       }
+    } else {
+        setStep(1);
+        setSelectedService(null);
     }
   }, [serviceFromUrl]);
 
-  // Funcția de submit care lipsea
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -66,6 +62,8 @@ const BookingFormContent = () => {
             setSelectedDate(undefined);
             setSelectedTime(null);
             setSubmissionStatus('idle');
+            // Curățăm URL-ul
+            window.history.pushState({}, '', window.location.pathname);
           }}
           className="mt-6 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400"
         >
@@ -101,7 +99,7 @@ const BookingFormContent = () => {
       {step === 2 && (
         <div>
           <h3 className="text-lg font-semibold text-brand-dark mb-4">Pasul 2: Alege data și ora</h3>
-           <p className="text-sm text-brand-gray -mt-2 mb-4">Serviciu selectat: <strong>{selectedService}</strong></p>
+          <p className="text-sm text-brand-gray -mt-2 mb-4">Serviciu selectat: <strong>{selectedService}</strong></p>
           <div className="grid md:grid-cols-2 gap-8">
             <div className="flex justify-center">
               <DayPicker
@@ -136,7 +134,7 @@ const BookingFormContent = () => {
             )}
           </div>
           <div className="flex justify-between mt-6">
-            <button onClick={() => setStep(1)} className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer">Înapoi</button>
+            <button onClick={() => { setStep(1); window.history.pushState({}, '', window.location.pathname); }} className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer">Înapoi</button>
             <button onClick={() => setStep(3)} disabled={!selectedDate || !selectedTime} className="rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">
               Continuă
             </button>
@@ -176,7 +174,6 @@ const BookingFormContent = () => {
   );
 };
 
-// Componenta principală
 const BookingForm = () => {
   return (
     <div className="bg-white p-8 rounded-2xl shadow-lg border border-brand-gray/10">

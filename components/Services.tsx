@@ -1,8 +1,8 @@
 'use client'; 
 
 import { Check } from 'lucide-react';
-// Am scos importul pentru Link, deoarece îl înlocuim cu <a>
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const servicesData = [
   {
@@ -45,9 +45,24 @@ const servicesData = [
 ];
 
 const Services = () => {
+  const router = useRouter();
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
+  };
+
+  const handleSelectPackage = (serviceTitle: string) => {
+    // 1. Găsim elementul de contact
+    const contactSection = document.getElementById('contact');
+    
+    // 2. Actualizăm URL-ul
+    const newUrl = `/#contact?service=${encodeURIComponent(serviceTitle)}`;
+    window.history.pushState({}, '', newUrl);
+
+    // 3. Facem scroll manual la secțiune
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -90,17 +105,16 @@ const Services = () => {
                 </p>
               </div>
               
-              {/* === MODIFICAREA ESTE AICI: Am înlocuit <Link> cu <a> === */}
-              <a
-                href={`#contact?service=${encodeURIComponent(service.title)}`}
-                className={`mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              <button
+                onClick={() => handleSelectPackage(service.title)}
+                className={`mt-8 w-full rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
                   service.isFeatured
                     ? 'bg-brand-accent text-white shadow-sm hover:bg-sky-400 focus-visible:outline-brand-accent'
                     : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
                 }`}
               >
                 Alege Pachetul
-              </a>
+              </button>
               
               <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-brand-gray xl:mt-10">
                 {service.features.map((feature) => (
