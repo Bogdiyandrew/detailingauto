@@ -36,7 +36,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full bg-brand-dark/80 backdrop-blur-lg">
+      <header className="sticky top-0 z-50 w-full bg-brand-dark/80 backdrop-blur-lg border-b border-white/10 shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between p-4 text-white">
           <Link href="#" className="text-xl font-bold tracking-wider rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent" onClick={handleLogoClick}>
             DIAMOND <span className="text-brand-accent">DETAILING(+logo)</span>

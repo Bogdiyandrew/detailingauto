@@ -27,18 +27,78 @@ const BookingFormContent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  useEffect(() => {
+  // Funcție pentru a extrage parametrul service din URL (inclusiv din hash)
+  const extractServiceFromUrl = () => {
+    // Verificăm mai întâi search params
     if (serviceFromUrl) {
-      const isValidService = services.some(s => s.name === serviceFromUrl);
+      return serviceFromUrl;
+    }
+
+    // Verificăm și în hash dacă există query string
+    const hash = window.location.hash;
+    if (hash.includes('?service=')) {
+      const urlParams = new URLSearchParams(hash.split('?')[1]);
+      return urlParams.get('service');
+    }
+
+    return null;
+  };
+
+  // Effect pentru a seta serviciul din URL
+  useEffect(() => {
+    const serviceFromAnyUrl = extractServiceFromUrl();
+    
+    if (serviceFromAnyUrl) {
+      const isValidService = services.some(s => s.name === serviceFromAnyUrl);
       if (isValidService) {
-        setSelectedService(serviceFromUrl);
+        setSelectedService(serviceFromAnyUrl);
         setStep(2);
       }
     } else {
-        setStep(1);
-        setSelectedService(null);
+      setStep(1);
+      setSelectedService(null);
     }
   }, [serviceFromUrl]);
+
+  // Effect pentru a asculta evenimentul custom de la Services
+  useEffect(() => {
+    const handleServiceSelected = (event: CustomEvent) => {
+      const serviceName = event.detail.service;
+      const isValidService = services.some(s => s.name === serviceName);
+      
+      if (isValidService) {
+        setSelectedService(serviceName);
+        setStep(2);
+      }
+    };
+
+    window.addEventListener('serviceSelected', handleServiceSelected as EventListener);
+    
+    return () => {
+      window.removeEventListener('serviceSelected', handleServiceSelected as EventListener);
+    };
+  }, []);
+
+  // Effect pentru a monitoriza schimbările din hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const serviceFromHash = extractServiceFromUrl();
+      
+      if (serviceFromHash) {
+        const isValidService = services.some(s => s.name === serviceFromHash);
+        if (isValidService) {
+          setSelectedService(serviceFromHash);
+          setStep(2);
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -49,6 +109,16 @@ const BookingFormContent = () => {
     setSubmissionStatus('success');
   };
 
+  const resetForm = () => {
+    setStep(1);
+    setSelectedService(null);
+    setSelectedDate(undefined);
+    setSelectedTime(null);
+    setSubmissionStatus('idle');
+    // Curățăm URL-ul
+    window.history.pushState({}, '', window.location.pathname);
+  };
+
   if (submissionStatus === 'success') {
     return (
       <div className="text-center">
@@ -56,15 +126,7 @@ const BookingFormContent = () => {
         <h3 className="mt-4 text-lg font-semibold text-brand-dark">Programare Trimisă!</h3>
         <p className="mt-2 text-brand-gray">Mulțumim! Te vom contacta în cel mai scurt timp pentru confirmare.</p>
         <button
-          onClick={() => {
-            setStep(1);
-            setSelectedService(null);
-            setSelectedDate(undefined);
-            setSelectedTime(null);
-            setSubmissionStatus('idle');
-            // Curățăm URL-ul
-            window.history.pushState({}, '', window.location.pathname);
-          }}
+          onClick={resetForm}
           className="mt-6 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400"
         >
           Fă o altă programare
@@ -134,8 +196,21 @@ const BookingFormContent = () => {
             )}
           </div>
           <div className="flex justify-between mt-6">
-            <button onClick={() => { setStep(1); window.history.pushState({}, '', window.location.pathname); }} className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer">Înapoi</button>
-            <button onClick={() => setStep(3)} disabled={!selectedDate || !selectedTime} className="rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed">
+            <button 
+              onClick={() => { 
+                setStep(1); 
+                setSelectedService(null);
+                window.history.pushState({}, '', window.location.pathname); 
+              }} 
+              className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer"
+            >
+              Înapoi
+            </button>
+            <button 
+              onClick={() => setStep(3)} 
+              disabled={!selectedDate || !selectedTime} 
+              className="rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
               Continuă
             </button>
           </div>

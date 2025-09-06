@@ -52,17 +52,33 @@ const Services = () => {
   };
 
   const handleSelectPackage = (serviceTitle: string) => {
-    // 1. Găsim elementul de contact
+    // Opțiunea 1: Dacă vrei să rămâi pe aceeași pagină cu ancoră
     const contactSection = document.getElementById('contact');
     
-    // 2. Actualizăm URL-ul
-    const newUrl = `/#contact?service=${encodeURIComponent(serviceTitle)}`;
+    // Actualizăm URL-ul cu parametrul service
+    const newUrl = `${window.location.pathname}#contact?service=${encodeURIComponent(serviceTitle)}`;
     window.history.pushState({}, '', newUrl);
 
-    // 3. Facem scroll manual la secțiune
+    // Facem scroll la secțiunea de contact
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    // Opțiunea 2: Dacă vrei să navighezi la o pagină separată de booking
+    // router.push(`/booking?service=${encodeURIComponent(serviceTitle)}`);
+    
+    // Opțiunea 3: Dacă BookingForm este pe aceeași pagină dar nu în secțiunea contact
+    // const bookingSection = document.getElementById('booking');
+    // const newUrl = `${window.location.pathname}#booking?service=${encodeURIComponent(serviceTitle)}`;
+    // window.history.pushState({}, '', newUrl);
+    // if (bookingSection) {
+    //   bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // }
+
+    // Declanșăm un eveniment custom pentru a notifica BookingForm despre schimbarea serviciului
+    window.dispatchEvent(new CustomEvent('serviceSelected', { 
+      detail: { service: serviceTitle } 
+    }));
   };
 
   return (

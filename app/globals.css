@@ -20,3 +20,24 @@
 body {
   font-family: var(--font-sans);
 }
+/* În globals.css - versiunea specifică cu clasa */
+.booking-calendar .rdp {
+  margin: 0 auto;
+  max-width: fit-content;
+}
+
+.booking-calendar .rdp-caption {
+  text-align: center !important;
+}
+
+.booking-calendar .rdp-table {
+  margin: 0 auto !important;
+}
+
+.booking-calendar .rdp-head_cell {
+  text-align: center !important;
+}
+
+.booking-calendar .rdp-cell {
+  text-align: center !important;
+}
