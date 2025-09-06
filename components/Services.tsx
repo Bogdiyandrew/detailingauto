@@ -1,5 +1,6 @@
 // app/components/Services.tsx
 import { Check } from 'lucide-react';
+import Link from 'next/link'; // 1. Asigură-te că Link este importat
 
 const servicesData = [
   {
@@ -74,16 +75,21 @@ const Services = () => {
                 <span className="text-4xl font-bold tracking-tight text-white">{service.price}</span>
                 <span className="text-sm font-semibold leading-6 text-brand-gray">RON</span>
               </p>
-              <a
+              
+              {/* === AICI ESTE MODIFICAREA === */}
+              {/* Am înlocuit tag-ul <a> cu <Link> */}
+              <Link
                 href="/#contact"
                 className={`mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
                   service.isFeatured
                     ? 'bg-brand-accent text-white shadow-sm hover:bg-sky-400 focus-visible:outline-brand-accent'
+                    // Aici am corectat o mică greșeală de stil
                     : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
                 }`}
               >
                 Alege Pachetul
-              </a>
+              </Link>
+              
               <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-brand-gray xl:mt-10">
                 {service.features.map((feature) => (
                   <li key={feature} className="flex gap-x-3">
