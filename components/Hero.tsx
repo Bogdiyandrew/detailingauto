@@ -39,7 +39,7 @@ const Hero = () => {
           href="/#contact"
           className="inline-block rounded-md border border-brand-accent bg-brand-accent/10 px-8 py-3 text-sm font-semibold uppercase tracking-wider text-white transition-all hover:bg-brand-accent/20 focus:outline-none focus:ring-2 focus:ring-brand-accent"
         >
-          Obține o Ofertă Acum
+          Programeazǎ-te Acum
         </Link>
       </div>
 
