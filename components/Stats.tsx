@@ -22,25 +22,29 @@ const statsData = [
 
 const Stats = () => {
   return (
-    // 1. Am adăugat un id și am schimbat fundalul într-un gri subtil
-    <section id="stats" className="bg-slate-100 py-20 sm:py-24">
+    <section id="stats" className="bg-slate-100 py-20 sm:py-24 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* 2. Am adăugat un container nou pentru cardul alb */}
-        <div className="relative isolate overflow-hidden bg-white px-6 py-16 text-center shadow-2xl rounded-3xl sm:px-16">
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
-            {statsData.map((stat, index) => (
-              <div key={index} className="flex flex-col items-center">
-                {stat.icon}
-                <dt className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">
-                  {stat.value}
-                </dt>
-                <dd className="mt-2 text-base leading-7 text-brand-gray">
-                  {stat.label}
-                </dd>
+        {/* Container exterior care aplică umbra și are colțuri rotunjite */}
+        <div className="relative rounded-3xl shadow-2xl">
+          {/* Container interior care taie perfect conținutul și are propriile colțuri rotunjite */}
+          <div className="relative isolate overflow-hidden bg-white rounded-3xl">
+            <div className="px-6 py-16 text-center sm:px-16">
+              <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+                {statsData.map((stat, index) => (
+                  <div key={index} className="flex flex-col items-center">
+                    {stat.icon}
+                    <dt className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">
+                      {stat.value}
+                    </dt>
+                    <dd className="mt-2 text-base leading-7 text-brand-gray">
+                      {stat.label}
+                    </dd>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-          {/* Efect vizual subtil (opțional) */}
+          {/* Elementul decorativ de fundal, care va fi tăiat corect */}
           <div
             className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 transform-gpu blur-3xl"
             aria-hidden="true"

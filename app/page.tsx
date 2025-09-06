@@ -7,14 +7,14 @@ import Contact from '@/components/Contact';
 
 export default function Home() {
   return (
-    <main>
+    // === Am adăugat id="main-content" aici ===
+    <main id="main-content">
       <Hero />
       <Stats />
       <BeforeAfter />
       <Services />
       <Testimonials />
       <Contact />
-      {/* Aici vor veni următoarele componente, precum Contact, etc. */}
     </main>
   );
 }
