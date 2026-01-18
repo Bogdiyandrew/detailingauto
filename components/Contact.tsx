@@ -33,7 +33,7 @@ const Contact = () => {
 
             <div className="flex flex-col gap-6">
               {/* Card Telefon - Simplu și curat */}
-              <a href="tel:+40751201507" className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-brand-accent/50 transition-all duration-300">
+              <a href="tel:+07xxxxxxxx" className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-brand-accent/50 transition-all duration-300">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-accent/10 text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
                   <Phone size={20} />
                 </div>

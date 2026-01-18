@@ -8,17 +8,17 @@ const statsData = [
   {
     icon: <SprayCan className="h-8 w-8 text-brand-accent" />,
     value: "Produse pro",
-    label: "Chimicale dedicate care protejează lacul și tapițeria.",
+    label: "Descriere",
   },
   {
     icon: <CarFront className="h-8 w-8 text-brand-accent" />,
     value: "+400",
-    label: "Mașini trecute prin mâinile noastre.",
+    label: "Mașini care au plecat din atelier",
   },
   {
     icon: <Gem className="h-8 w-8 text-brand-accent" />,
-    value: "Calitate diamant",
-    label: "Atenție obsesivă la cel mai mic detaliu.",
+    value: "Atenție la detalii",
+    label: "Nu ne grăbim",
   },
 ];
 

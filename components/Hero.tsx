@@ -73,21 +73,21 @@ const Hero = () => {
         animate="visible"
       >
         <motion.h1 
-          className="mb-6 text-5xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl drop-shadow-2xl"
-          variants={itemVariants}
-        >
-          Redă strălucirea de <br className="hidden md:block" />
-          <span className="bg-gradient-to-r from-brand-accent to-sky-500 bg-clip-text text-transparent">
-            DIAMANT<br className="md:hidden" />
-          </span> mașinii tale
-        </motion.h1>
-        
-        <motion.p 
-          className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-300 md:text-xl"
-          variants={itemVariants}
-        >
-          Mașina ta merită să arate impecabil. Servicii complete de cosmetică auto chiar aici, în Pitești.
-        </motion.p>
+        className="mb-6 text-5xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl drop-shadow-2xl"
+        variants={itemVariants}
+      >
+        Mașina ta, din nou <br className="hidden md:block" />
+        <span className="bg-gradient-to-r from-brand-accent to-sky-500 bg-clip-text text-transparent">
+        CA ÎN PRIMA ZI
+        </span>
+</motion.h1>
+
+<motion.p 
+  className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-300 md:text-xl"
+  variants={itemVariants}
+>
+  Detailing auto profesional în Pitești. Curățare în profunzime, polish și protecție ceramică la standarde de reprezentanță.
+</motion.p>
         
         <motion.div
           variants={itemVariants}
