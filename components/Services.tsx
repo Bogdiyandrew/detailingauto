@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 
 const servicesData = [
   {
-    title: 'Curățare Interior',
-    subtitle: 'Perfect pentru când vrei să te simți din nou bine în mașina ta.',
-    price: '450',
+    title: 'Pachet1',
+    subtitle: '-',
+    price: '300',
     features: [
       '-',
       '-',
@@ -19,9 +19,9 @@ const servicesData = [
     isFeatured: false,
   },
   {
-    title: 'Pachetul Complet',
-    subtitle: 'Cea mai bună alegere dacă vrei o transformare totală.',
-    price: '1200',
+    title: 'Pachet2',
+    subtitle: '-',
+    price: '400',
     features: [
       '-',
       '-',
@@ -32,9 +32,9 @@ const servicesData = [
     isFeatured: true,
   },
   {
-    title: 'Polish & Ceramică',
-    subtitle: 'Pentru pasionați. Protecție maximă și luciu "oglindă".',
-    price: '1500',
+    title: 'Pachetul 3etc',
+    subtitle: '-',
+    price: '200',
     features: [
       '-',
       '-',
@@ -90,7 +90,6 @@ const Services = () => {
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center mb-16">
-          {/* Am scos textul "Prețuri corecte" de aici */}
           <p className="mt-2 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
             Alege ce i se potrivește <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-white">mașinii tale</span>
@@ -135,7 +134,7 @@ const Services = () => {
                 </p>
                 
                 <p className="mt-6 flex items-baseline gap-x-1">
-                  <span className="text-sm font-semibold leading-6 text-gray-400">de la</span>
+                  {/* Aici am scos span-ul cu "de la" */}
                   <span className={`text-4xl font-bold tracking-tight ${service.isFeatured ? 'text-white' : 'text-gray-100'}`}>
                     {service.price}
                   </span>
@@ -157,7 +156,7 @@ const Services = () => {
                 className={`
                   mt-8 block w-full rounded-xl py-3 px-3 text-center text-sm font-bold leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 transition-all duration-300
                   ${service.isFeatured
-                    ? 'bg-brand-accent text-white hover:bg-blue-500 shadow-lg shadow-brand-accent/25 focus-visible:outline-brand-accent hover:scale-105'
+                    ? 'bg-brand-accent text-white hover:bg-blue-500 shadow-lg shadow-brand-accent/25 focus-visible:outline-brand-accent hover:scale-105 cursor-pointer'
                     : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
                   }
                 `}

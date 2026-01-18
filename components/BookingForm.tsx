@@ -6,12 +6,13 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
-import { Check, Calendar, Clock, User, ShieldCheck, Star, LoaderCircle, PartyPopper } from 'lucide-react';
+import { Calendar, Clock, User, ShieldCheck, Star, LoaderCircle, PartyPopper, ChevronRight } from 'lucide-react';
+
 
 const services = [
-  { id: 'interior', name: 'Detailing Interior', icon: <User size={24} /> },
-  { id: 'ceramic', name: 'Polish & Ceramic', icon: <ShieldCheck size={24} /> },
-  { id: 'crystal', name: 'Pachetul Crystal', icon: <Star size={24} /> },
+  { id: 'interior', name: 'Pachet 1', icon: <User size={32} /> },
+  { id: 'ceramic', name: 'Pachet 2', icon: <ShieldCheck size={32} /> },
+  { id: 'crystal', name: 'Pachet 3', icon: <Star size={32} /> },
 ];
 
 const availableTimes = ['09:00', '11:00', '13:00', '15:00', '17:00'];
@@ -27,32 +28,23 @@ const BookingFormContent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  // Funcție pentru a extrage parametrul service din URL (inclusiv din hash)
   const extractServiceFromUrl = () => {
-    // Verificăm mai întâi search params
-    if (serviceFromUrl) {
-      return serviceFromUrl;
-    }
-
-    // Verificăm și în hash dacă există query string
+    if (serviceFromUrl) return serviceFromUrl;
     const hash = window.location.hash;
     if (hash.includes('?service=')) {
       const urlParams = new URLSearchParams(hash.split('?')[1]);
       return urlParams.get('service');
     }
-
     return null;
   };
 
-  // Effect pentru a seta serviciul din URL
   useEffect(() => {
     const serviceFromAnyUrl = extractServiceFromUrl();
-    
     if (serviceFromAnyUrl) {
       const isValidService = services.some(s => s.name === serviceFromAnyUrl);
       if (isValidService) {
         setSelectedService(serviceFromAnyUrl);
-        setSelectedDate(new Date()); // Setează automat data curentă
+        setSelectedDate(new Date());
         setStep(2);
       }
     } else {
@@ -61,53 +53,24 @@ const BookingFormContent = () => {
     }
   }, [serviceFromUrl]);
 
-  // Effect pentru a asculta evenimentul custom de la Services
   useEffect(() => {
     const handleServiceSelected = (event: CustomEvent) => {
       const serviceName = event.detail.service;
       const isValidService = services.some(s => s.name === serviceName);
-      
       if (isValidService) {
         setSelectedService(serviceName);
-        setSelectedDate(new Date()); // Setează automat data curentă
+        setSelectedDate(new Date());
         setStep(2);
       }
     };
-
     window.addEventListener('serviceSelected', handleServiceSelected as EventListener);
-    
-    return () => {
-      window.removeEventListener('serviceSelected', handleServiceSelected as EventListener);
-    };
-  }, []);
-
-  // Effect pentru a monitoriza schimbările din hash
-  useEffect(() => {
-    const handleHashChange = () => {
-      const serviceFromHash = extractServiceFromUrl();
-      
-      if (serviceFromHash) {
-        const isValidService = services.some(s => s.name === serviceFromHash);
-        if (isValidService) {
-          setSelectedService(serviceFromHash);
-          setSelectedDate(new Date()); // Setează automat data curentă
-          setStep(2);
-        }
-      }
-    };
-
-    window.addEventListener('hashchange', handleHashChange);
-    
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
+    return () => window.removeEventListener('serviceSelected', handleServiceSelected as EventListener);
   }, []);
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmissionStatus('idle');
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
     setIsSubmitting(false);
     setSubmissionStatus('success');
   };
@@ -118,19 +81,20 @@ const BookingFormContent = () => {
     setSelectedDate(undefined);
     setSelectedTime(null);
     setSubmissionStatus('idle');
-    // Curățăm URL-ul
     window.history.pushState({}, '', window.location.pathname);
   };
 
   if (submissionStatus === 'success') {
     return (
-      <div className="text-center">
-        <PartyPopper className="mx-auto h-12 w-12 text-green-500" />
-        <h3 className="mt-4 text-lg font-semibold text-brand-dark">Programare Trimisă!</h3>
-        <p className="mt-2 text-brand-gray">Mulțumim! Te vom contacta în cel mai scurt timp pentru confirmare.</p>
+      <div className="text-center py-6">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mb-4">
+          <PartyPopper className="h-8 w-8 text-green-600" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-900">Programare Trimisă!</h3>
+        <p className="mt-2 text-sm text-gray-500 max-w-xs mx-auto">Te vom suna în scurt timp pentru confirmare.</p>
         <button
           onClick={resetForm}
-          className="mt-6 rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400"
+          className="mt-6 rounded-lg bg-brand-dark px-6 py-3 text-sm font-semibold text-white shadow hover:bg-gray-800 transition-all w-full"
         >
           Fă o altă programare
         </button>
@@ -139,23 +103,48 @@ const BookingFormContent = () => {
   }
 
   return (
-    <div>
+    <div className="h-full">
+      <style jsx global>{`
+        .rdp { --rdp-cell-size: 32px; --rdp-accent-color: #0ea5e9; --rdp-background-color: #e0f2fe; margin: 0; width: 100%; }
+        .rdp-day_selected:not([disabled]) { background-color: var(--rdp-accent-color); color: white; font-weight: bold; }
+        .rdp-day_selected:hover:not([disabled]) { background-color: var(--rdp-accent-color); opacity: 0.8; }
+        .rdp-button:hover:not([disabled]):not(.rdp-day_selected) { background-color: #f3f4f6; }
+        .rdp-month { width: 100%; }
+        .rdp-table { width: 100%; max-width: 100%; }
+        .rdp-caption { display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 0.5rem; height: 32px; padding: 0 35px; }
+        .rdp-caption_label { font-size: 0.95rem; font-weight: 700; color: #111827; z-index: 1; text-transform: capitalize; }
+        .rdp-nav_button { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: transparent; color: #4b5563; position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; }
+        .rdp-nav_button_previous { left: 0; }
+        .rdp-nav_button_next { right: 0; }
+        .rdp-nav_button:hover { background-color: #f3f4f6; color: #0ea5e9; }
+        .rdp-head_cell { color: #6b7280; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding-bottom: 0.5rem; }
+        .rdp-day { font-size: 0.875rem; }
+      `}</style>
+
       {step === 1 && (
-        <div>
-          <h3 className="text-lg font-semibold text-brand-dark mb-4">Pasul 1: Alege serviciul dorit</h3>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <h3 className="text-xl font-bold text-gray-900 mb-6">Alege serviciul</h3>
           <div className="grid grid-cols-1 gap-4">
             {services.map((service) => (
               <button
                 key={service.id}
                 onClick={() => {
                   setSelectedService(service.name);
-                  setSelectedDate(new Date()); // Setează automat data curentă
+                  setSelectedDate(new Date());
                   setStep(2);
                 }}
-                className="flex items-center gap-4 p-4 border rounded-lg text-left hover:bg-brand-accent/10 hover:border-brand-accent transition-all cursor-pointer"
+                // AM MODIFICAT AICI: Am scos efectele 'hover:transform', 'hover:shadow', etc.
+                // Am adăugat 'cursor-pointer' și doar un border subtil la hover.
+                className="flex items-center gap-5 p-5 rounded-2xl border border-gray-200 bg-white cursor-pointer hover:border-brand-accent transition-all text-left"
               >
-                <span className="text-brand-accent">{service.icon}</span>
-                <span className="font-semibold text-brand-dark">{service.name}</span>
+                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-xl bg-gray-50 text-gray-600 transition-colors duration-300">
+                  {service.icon}
+                </div>
+                <div className="flex-grow">
+                  <span className="block text-lg font-bold text-gray-800 mb-1">{service.name}</span>
+                  <span className="text-sm text-gray-400 font-medium">Selectează pentru a continua</span>
+                </div>
+                <ChevronRight className="text-gray-300" />
               </button>
             ))}
           </div>
@@ -163,39 +152,40 @@ const BookingFormContent = () => {
       )}
       
       {step === 2 && (
-        <div>
-          <h3 className="text-lg font-semibold text-brand-dark mb-4">Pasul 2: Alege data și ora</h3>
-          <p className="text-sm text-brand-gray -mt-2 mb-4">Serviciu selectat: <strong className="text-brand-accent">{selectedService}</strong></p>          <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-            <div className="flex justify-center booking-calendar">
-              <div className="w-full max-w-sm">
-                <DayPicker
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={setSelectedDate}
-                  locale={ro}
-                  fromDate={new Date()}
-                  styles={{
-                    head_cell: { width: '40px' },
-                    caption_label: { fontSize: '1.1rem', fontWeight: 'bold' },
-                    caption: { textAlign: 'center', marginBottom: '1rem' },
-                    table: { margin: '0 auto', width: '100%' },
-                    head: { textAlign: 'center' },
-                  }}
-                  className="mx-auto w-full"
-                />
-              </div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="mb-4 pb-2 border-b border-gray-100 flex justify-between items-center">
+             <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">SERVICIU</p>
+                <p className="text-sm font-bold text-brand-dark truncate max-w-[200px]">{selectedService}</p>
+             </div>
+             <button onClick={() => setStep(1)} className="text-xs text-brand-accent hover:underline font-medium px-2 py-1 bg-sky-50 rounded">Schimbă</button>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div className="w-full bg-white rounded-lg border border-gray-100 p-1 shadow-sm">
+              <DayPicker
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                locale={ro}
+                fromDate={new Date()}
+                className="w-full flex justify-center"
+              />
             </div>
-            <div className="flex flex-col mt-4 md:mt-0">
-              <h4 className="font-semibold mb-4">
-                Ore disponibile pentru {format(selectedDate || new Date(), 'PPP', { locale: ro })}:
-              </h4>
-              <div className="grid grid-cols-2 gap-3 max-w-xs">
+            
+            <div>
+              <p className="text-xs font-semibold text-gray-600 mb-2">
+                Ora pentru {selectedDate ? format(selectedDate, 'dd MMM', { locale: ro }) : '...'}:
+              </p>
+              <div className="grid grid-cols-5 gap-1.5">
                 {availableTimes.map((time) => (
                   <button
                     key={time}
                     onClick={() => setSelectedTime(time)}
-                    className={`p-3 border rounded-md text-center transition-colors cursor-pointer text-sm font-medium ${
-                      selectedTime === time ? 'bg-brand-accent text-white border-brand-accent' : 'hover:border-brand-accent'
+                    className={`py-1.5 px-1 rounded text-xs font-medium border transition-all ${
+                      selectedTime === time 
+                        ? 'bg-brand-dark text-white border-brand-dark shadow-sm' 
+                        : 'bg-white text-gray-600 border-gray-200 hover:border-brand-accent hover:text-brand-accent'
                     }`}
                   >
                     {time}
@@ -204,22 +194,12 @@ const BookingFormContent = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-between mt-6">
-            <button 
-              onClick={() => { 
-                setStep(1); 
-                setSelectedService(null);
-                setSelectedDate(undefined);
-                window.history.pushState({}, '', window.location.pathname); 
-              }} 
-              className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer"
-            >
-              Înapoi
-            </button>
+
+          <div className="mt-6 flex justify-end">
             <button 
               onClick={() => setStep(3)} 
               disabled={!selectedDate || !selectedTime} 
-              className="rounded-md bg-brand-accent px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="w-full rounded-lg bg-brand-accent px-4 py-3 text-sm font-bold text-white shadow hover:bg-sky-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               Continuă
             </button>
@@ -228,28 +208,63 @@ const BookingFormContent = () => {
       )}
 
       {step === 3 && (
-        <div>
-          <h3 className="text-lg font-semibold text-brand-dark mb-4">Pasul 3: Confirmă programarea</h3>
-          <div className="bg-white/80 p-6 rounded-lg border border-brand-gray/20 space-y-4 mb-6">
-              <div className="flex items-center gap-3"><Check className="text-brand-accent" /> <span className="text-brand-dark">Serviciu: <strong>{selectedService}</strong></span></div>
-              <div className="flex items-center gap-3"><Calendar className="text-brand-accent" /> <span className="text-brand-dark">Data: <strong>{selectedDate ? format(selectedDate, 'PPP', { locale: ro }) : ''}</strong></span></div>
-              <div className="flex items-center gap-3"><Clock className="text-brand-accent" /> <span className="text-brand-dark">Ora: <strong>{selectedTime}</strong></span></div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <User size={14} className="text-brand-accent" /> 
+                <span className="font-medium">{selectedService}</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <Calendar size={14} className="text-brand-accent" /> 
+                <span className="capitalize font-medium">{selectedDate ? format(selectedDate, 'PPP', { locale: ro }) : ''}</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <Clock size={14} className="text-brand-accent" /> 
+                <span className="font-medium">Ora {selectedTime}</span>
+              </div>
           </div>
-          <form className="space-y-4" onSubmit={handleFormSubmit}>
-               <div>
-                  <label htmlFor="name" className="text-sm font-medium">Nume complet</label>
-                  <input type="text" id="name" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-accent focus:ring-brand-accent sm:text-sm" />
+
+          <form className="space-y-3" onSubmit={handleFormSubmit}>
+               <div className="space-y-1">
+                  <label htmlFor="name" className="text-xs font-bold text-gray-700 uppercase">Nume</label>
+                  <input 
+                    type="text" 
+                    id="name" 
+                    required 
+                    placeholder="Numele tău"
+                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-accent focus:ring-brand-accent" 
+                  />
                </div>
-               <div>
-                  <label htmlFor="phone" className="text-sm font-medium">Număr de telefon</label>
-                  <input type="tel" id="phone" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-accent focus:ring-brand-accent sm:text-sm" />
+               <div className="space-y-1">
+                  <label htmlFor="phone" className="text-xs font-bold text-gray-700 uppercase">Telefon</label>
+                  <input 
+                    type="tel" 
+                    id="phone" 
+                    required 
+                    placeholder="07xx..."
+                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-accent focus:ring-brand-accent" 
+                  />
                </div>
-               {submissionStatus === 'error' && <p className="text-red-500 text-sm">A apărut o eroare. Te rugăm să încerci din nou.</p>}
-               <div className="flex justify-between mt-6 pt-2">
-                  <button type="button" onClick={() => setStep(2)} disabled={isSubmitting} className="text-sm font-semibold text-brand-gray hover:text-brand-dark cursor-pointer disabled:opacity-50">Înapoi</button>
-                  <button type="submit" disabled={isSubmitting} className="rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 cursor-pointer flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                      {isSubmitting && <LoaderCircle className="animate-spin h-4 w-4" />}
-                      {isSubmitting ? 'Se trimite...' : 'Confirmă Programarea'}
+               
+               <div className="flex gap-2 mt-6 pt-2">
+                  <button 
+                    type="button" 
+                    onClick={() => setStep(2)} 
+                    disabled={isSubmitting} 
+                    className="flex-1 rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  >
+                    Înapoi
+                  </button>
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting} 
+                    className="flex-[2] rounded-lg bg-green-600 px-3 py-2.5 text-sm font-bold text-white shadow hover:bg-green-500 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait"
+                  >
+                      {isSubmitting ? (
+                        <LoaderCircle className="animate-spin h-4 w-4" />
+                      ) : (
+                        'Rezervă'
+                      )}
                   </button>
                </div>
           </form>
@@ -261,8 +276,8 @@ const BookingFormContent = () => {
 
 const BookingForm = () => {
   return (
-    <div className="bg-white p-8 rounded-2xl shadow-lg border border-brand-gray/10">
-      <Suspense fallback={<div className="text-center p-8">Se încarcă formularul...</div>}>
+    <div className="bg-white p-5 rounded-2xl shadow-xl border border-gray-100 w-full max-w-md mx-auto min-h-[500px] flex flex-col justify-center">
+      <Suspense fallback={<div className="flex justify-center items-center h-40 text-brand-accent"><LoaderCircle className="animate-spin" /></div>}>
         <BookingFormContent />
       </Suspense>
     </div>
