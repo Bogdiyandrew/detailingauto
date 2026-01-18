@@ -8,11 +8,11 @@ import { format } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { Calendar, Clock, User, ShieldCheck, Star, LoaderCircle, PartyPopper, ChevronRight } from 'lucide-react';
 
-
+// MODIFICARE: Am actualizat numele și ID-urile pentru a fi mai profesionale
 const services = [
-  { id: 'interior', name: 'Pachet 1', icon: <User size={32} /> },
-  { id: 'ceramic', name: 'Pachet 2', icon: <ShieldCheck size={32} /> },
-  { id: 'crystal', name: 'Pachet 3', icon: <Star size={32} /> },
+  { id: 'standard', name: 'Standard', icon: <User size={32} /> },
+  { id: 'premium', name: 'Premium Interior', icon: <ShieldCheck size={32} /> },
+  { id: 'showroom', name: 'Full Showroom', icon: <Star size={32} /> },
 ];
 
 const availableTimes = ['09:00', '11:00', '13:00', '15:00', '17:00'];
@@ -70,6 +70,7 @@ const BookingFormContent = () => {
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    // Simulare trimitere date
     await new Promise(resolve => setTimeout(resolve, 1500));
     setIsSubmitting(false);
     setSubmissionStatus('success');
@@ -133,8 +134,6 @@ const BookingFormContent = () => {
                   setSelectedDate(new Date());
                   setStep(2);
                 }}
-                // AM MODIFICAT AICI: Am scos efectele 'hover:transform', 'hover:shadow', etc.
-                // Am adăugat 'cursor-pointer' și doar un border subtil la hover.
                 className="flex items-center gap-5 p-5 rounded-2xl border border-gray-200 bg-white cursor-pointer hover:border-brand-accent transition-all text-left"
               >
                 <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-xl bg-gray-50 text-gray-600 transition-colors duration-300">
@@ -209,18 +208,20 @@ const BookingFormContent = () => {
 
       {step === 3 && (
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 space-y-2 mb-4">
-              <div className="flex items-center gap-2 text-xs text-gray-600">
-                <User size={14} className="text-brand-accent" /> 
-                <span className="font-medium">{selectedService}</span>
+          
+          {/* MODIFICARE: Contrast crescut pentru rezumat */}
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-3 mb-6">
+              <div className="flex items-center gap-3 text-sm text-gray-900">
+                <User size={18} className="text-brand-accent flex-shrink-0" /> 
+                <span className="font-semibold">{selectedService}</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
-                <Calendar size={14} className="text-brand-accent" /> 
-                <span className="capitalize font-medium">{selectedDate ? format(selectedDate, 'PPP', { locale: ro }) : ''}</span>
+              <div className="flex items-center gap-3 text-sm text-gray-900">
+                <Calendar size={18} className="text-brand-accent flex-shrink-0" /> 
+                <span className="capitalize font-semibold">{selectedDate ? format(selectedDate, 'PPP', { locale: ro }) : ''}</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
-                <Clock size={14} className="text-brand-accent" /> 
-                <span className="font-medium">Ora {selectedTime}</span>
+              <div className="flex items-center gap-3 text-sm text-gray-900">
+                <Clock size={18} className="text-brand-accent flex-shrink-0" /> 
+                <span className="font-semibold">Ora {selectedTime}</span>
               </div>
           </div>
 
@@ -232,7 +233,7 @@ const BookingFormContent = () => {
                     id="name" 
                     required 
                     placeholder="Numele tău"
-                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-accent focus:ring-brand-accent" 
+                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-accent focus:ring-brand-accent text-gray-900" 
                   />
                </div>
                <div className="space-y-1">
@@ -242,7 +243,7 @@ const BookingFormContent = () => {
                     id="phone" 
                     required 
                     placeholder="07xx..."
-                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-accent focus:ring-brand-accent" 
+                    className="w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-accent focus:ring-brand-accent text-gray-900" 
                   />
                </div>
                
