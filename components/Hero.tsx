@@ -8,7 +8,6 @@ import { ArrowRight } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faTiktok } from '@fortawesome/free-brands-svg-icons';
 
-// Componentă pentru titlul principal (păstrăm efectul cuvânt cu cuvânt AICI, dar reparăm diacriticele)
 const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, className?: string, isMobile: boolean, delay?: number }) => {
   const words = text.split(" ");
 
@@ -43,8 +42,7 @@ const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, 
 
   return (
     <motion.div
-      // MODIFICARE: Am scos 'overflow: hidden' și am adăugat padding pentru a nu tăia diacriticele (î, ș, ț)
-      style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", padding: "5px 0" }}
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: isMobile ? "center" : "flex-start", padding: "5px 0" }}
       variants={container}
       initial="hidden"
       whileInView="visible"
@@ -96,19 +94,18 @@ const Hero = () => {
     }
   };
 
-  // MODIFICARE: Variante pentru subtitlu (animație în bloc, tot odată)
   const subtitleVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 20,
-      filter: isMobile ? "blur(0px)" : "blur(5px)" // Blur mai subtil la subtitlu
+      filter: isMobile ? "blur(0px)" : "blur(5px)" 
     },
     visible: { 
       opacity: 1, 
       y: 0, 
       filter: "blur(0px)",
       transition: { 
-        delay: 0.8, // Apare după titlu
+        delay: 0.8, 
         duration: 1, 
         ease: "easeOut" 
       } 
@@ -116,14 +113,16 @@ const Hero = () => {
   };
 
   return (
-    <section ref={targetRef} className="relative flex h-dvh items-center justify-center overflow-hidden bg-brand-dark">
-      {/* Background Image */}
+    <section 
+      ref={targetRef} 
+      className="relative flex h-dvh items-start pt-32 md:pt-0 md:items-center overflow-hidden bg-brand-dark"
+    >
       <motion.div 
         style={{ y, scale }}
         className="absolute inset-0 z-0 will-change-transform"
       >
         <Image
-          src="/hero-desktop.webp"
+          src="/HERODESK.jpeg"
           alt="Interior auto curățat profesional"
           fill
           className="hidden object-cover md:block"
@@ -132,78 +131,94 @@ const Hero = () => {
           sizes="100vw"
         />
         <Image
-          src="/hero-mobile.webp"
+          src="/HEROMOB.jpeg"
           alt="Interior auto curățat profesional"
           fill
-          className="block object-cover md:hidden"
+          className="block object-cover object-bottom md:hidden"
           priority
           quality={70} 
           sizes="100vh"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-brand-dark" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/80 via-black/40 to-transparent md:bg-gradient-to-r md:from-black/80 md:via-black/40 md:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/90" />
       </motion.div>
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto">
         
-        <div className="mb-6 drop-shadow-2xl">
-          {/* Titlu mic - rămâne cu efectul elegant cuvânt cu cuvânt */}
-          <AnimatedText 
-            text="Mașina ta, din nou" 
-            isMobile={isMobile}
-            className="text-5xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl mb-2"
-          />
+        <div className="flex flex-col items-center md:items-start max-w-4xl">
           
-          {/* Titlu Gradient */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20, filter: isMobile ? "blur(0px)" : "blur(10px)" }}
-            whileInView={{ 
-              opacity: 1, 
-              y: 0, 
-              filter: "blur(0px)",
-              transition: { delay: 0.6, duration: 0.8 } 
-            }}
+          <div className="mb-6 md:mb-8 w-full flex flex-col items-center md:items-start">
+            <div className="relative z-10 w-full">
+              <AnimatedText 
+                text="Mașina ta, din nou" 
+                isMobile={isMobile}
+                className="text-3xl font-medium tracking-wide text-white/90 md:text-6xl lg:text-7xl mb-[-5px] md:mb-[-15px] w-full"
+              />
+            </div>
+            
+            <div className="relative w-full text-center md:text-left">
+              <motion.div 
+                 initial={{ opacity: 0, scale: 0.8 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
+                 transition={{ delay: 0.5, duration: 1.5 }}
+                 className="absolute left-1/2 md:left-1/3 top-1/2 -z-10 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/20 blur-[50px] md:blur-[60px]"
+              />
+
+              <motion.h1
+                initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+                whileInView={{ 
+                  opacity: 1, 
+                  y: 0, 
+                  filter: "blur(0px)",
+                  transition: { delay: 0.4, duration: 0.8, type: "spring", bounce: 0.4 } 
+                }}
+                viewport={{ once: true }}
+                className="text-5xl xs:text-6xl md:text-8xl lg:text-[7rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-sky-300 to-sky-600 drop-shadow-[0_0_15px_rgba(14,165,233,0.3)] md:drop-shadow-[0_0_25px_rgba(14,165,233,0.4)] py-2 md:py-4 leading-[1.1]"
+              >
+                CA ÎN PRIMA ZI
+              </motion.h1>
+            </div>
+          </div>
+
+          <motion.div
+            variants={subtitleVariants}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            className="text-5xl font-extrabold tracking-tight md:text-7xl lg:text-8xl bg-gradient-to-r from-brand-accent to-sky-500 bg-clip-text text-transparent block mt-2 md:mt-4 py-2"
+            className="flex flex-col items-center md:items-start gap-4 w-full"
           >
-            CA ÎN PRIMA ZI
-          </motion.h1>
+            <div className="h-[2px] w-12 bg-sky-500/50" />
+            
+            <p className="mb-8 max-w-xl text-base md:text-xl font-light leading-relaxed text-slate-300 text-center md:text-left">
+              Detailing auto profesional în <span className="text-white font-medium">Pitești</span>. 
+              Curățare în profunzime, polish și protecție ceramică.
+            </p>
+          </motion.div>
+          
+          <motion.div
+            variants={buttonVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="mt-75 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-3 sm:flex-row md:justify-start"
+          >
+            <Link
+              href="/#contact"
+              className="group w-full sm:w-auto justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-brand-accent/20 transition-all hover:scale-105 hover:bg-sky-400 hover:shadow-brand-accent/40 focus:outline-none focus:ring-4 focus:ring-brand-accent/30"
+            >
+              <span className="relative z-10">Programează-te</span>
+              <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              <div className="absolute inset-0 -z-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0" />
+            </Link>
+
+            <Link
+              href="/#servicii"
+              className="group w-full sm:w-auto justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10"
+            >
+              Descoperă serviciile
+            </Link>
+          </motion.div>
         </div>
-
-        {/* MODIFICARE: Subtitlu - Acum este un motion.p simplu, se mișcă TOT ODATĂ */}
-        <motion.p 
-          variants={subtitleVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-300 md:text-xl py-1"
-        >
-          Detailing auto profesional în Pitești. Curățare în profunzime, polish și protecție ceramică la standarde de reprezentanță.
-        </motion.p>
-        
-        {/* Butoane */}
-        <motion.div
-          variants={buttonVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="flex flex-col items-center justify-center gap-4 sm:flex-row"
-        >
-          <Link
-            href="/#contact"
-            className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-4 text-base font-bold text-white shadow-lg shadow-brand-accent/20 transition-all hover:scale-105 hover:bg-sky-400 hover:shadow-brand-accent/40 focus:outline-none focus:ring-4 focus:ring-brand-accent/30"
-          >
-            <span className="relative z-10">Programează-te</span>
-            <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            <div className="absolute inset-0 -z-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0" />
-          </Link>
-
-          <Link
-            href="/#servicii"
-            className="group flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10"
-          >
-            Descoperă serviciile
-          </Link>
-        </motion.div>
       </div>
 
       <motion.div 
@@ -216,20 +231,18 @@ const Hero = () => {
           href="https://wa.me/40xx" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110 hover:shadow-lg hover:shadow-green-500/30"
-          aria-label="Contactează-ne pe WhatsApp"
+          className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110"
         >
-          <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
+          <FontAwesomeIcon icon={faWhatsapp} className="h-5 w-5 md:h-6 md:w-6" />
         </a>
         
         <a 
           href="https://www.tiktok.com/@_.diamond.detailing._" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110 hover:shadow-lg hover:shadow-white/10"
-          aria-label="Urmărește-ne pe TikTok"
+          className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110"
         >
-          <FontAwesomeIcon icon={faTiktok} className="h-5 w-5" />
+          <FontAwesomeIcon icon={faTiktok} className="h-4 w-4 md:h-5 md:w-5" />
         </a>
       </motion.div>
     </section>

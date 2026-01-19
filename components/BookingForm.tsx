@@ -9,9 +9,9 @@ import { ro } from 'date-fns/locale';
 import { Calendar, Clock, User, ShieldCheck, Star, LoaderCircle, PartyPopper, ChevronRight } from 'lucide-react';
 
 const services = [
-  { id: 'standard', name: 'Standard', icon: <User size={32} /> },
-  { id: 'premium', name: 'Premium Interior', icon: <ShieldCheck size={32} /> },
-  { id: 'showroom', name: 'Full Showroom', icon: <Star size={32} /> },
+  { id: 'standard', name: 'Pachet 1', icon: <User size={32} /> },
+  { id: 'premium', name: 'Pachet 2', icon: <ShieldCheck size={32} /> },
+  { id: 'showroom', name: 'Pachet 3', icon: <Star size={32} /> },
 ];
 
 const availableTimes = ['09:00', '11:00', '13:00', '15:00', '17:00'];

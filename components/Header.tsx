@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, Gem } from 'lucide-react';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
-import { motion, AnimatePresence } from 'framer-motion';
+// FIX: Am adăugat 'Variants' în import
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,165 +32,182 @@ const Header = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const menuVariants = {
-    hidden: { x: '100%' },
+  // FIX: Am adăugat tipul ': Variants' aici pentru a rezolva eroarea TypeScript
+  const menuVariants: Variants = {
+    hidden: { x: '100%', opacity: 0 },
     visible: { 
       x: 0, 
-      transition: { type: 'spring', stiffness: 300, damping: 30, staggerChildren: 0.1 } as const
+      opacity: 1,
+      transition: { type: 'spring', stiffness: 300, damping: 30 }
     },
     exit: { 
       x: '100%', 
-      transition: { type: 'spring', stiffness: 300, damping: 30 } as const
+      opacity: 0,
+      transition: { duration: 0.3 }
     },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: 20 },
-    visible: { opacity: 1, x: 0 },
   };
 
   return (
     <>
       <motion.header 
-        className={`fixed top-0 z-50 w-full transition-all duration-500 border-b ${
+        className={`fixed top-0 z-50 w-full transition-all duration-500 ${
           isScrolled 
-            ? 'bg-brand-dark/85 backdrop-blur-md border-white/10 py-3 shadow-lg' 
-            : 'bg-transparent border-transparent py-5'
+            ? 'bg-black/60 backdrop-blur-md border-b border-white/5 py-3 shadow-2xl' 
+            : 'bg-gradient-to-b from-black/80 via-black/40 to-transparent py-6'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8 text-white">
+        <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 md:px-12 lg:px-16 text-white">
           
+          {/* LOGO */}
           <Link 
             href="#" 
-            className="flex items-center gap-2 text-xl font-bold tracking-wider group focus:outline-none" 
+            className="flex items-center gap-2.5 group focus:outline-none" 
             onClick={handleLogoClick}
           >
-            <div className="relative">
-              <Gem className={`h-6 w-6 transition-colors duration-300 ${isScrolled ? 'text-brand-accent' : 'text-white group-hover:text-brand-accent'}`} />
-              <div className="absolute inset-0 bg-brand-accent/50 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative flex items-center justify-center">
+              <Gem className="h-7 w-7 text-brand-accent transition-transform group-hover:scale-110 duration-300 drop-shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
             </div>
-            <span>
-              DIAMOND <span className="text-brand-accent">DETAILING</span>
-            </span>
+            <div className="flex flex-col leading-none">
+              <span className="font-extrabold text-xl tracking-wider text-white">DIAMOND</span>
+              <span className="text-[0.65rem] font-medium tracking-[0.2em] text-brand-accent uppercase">Detailing</span>
+            </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
+          {/* DESKTOP NAV */}
+          <nav className="hidden md:flex items-center gap-2 bg-white/5 rounded-full p-1 border border-white/5 backdrop-blur-sm">
             {navLinks.map((link) => {
               const isActive = activeSection === link.href.substring(1);
               return (
                 <a 
                   key={link.href} 
                   href={link.href} 
-                  className="relative px-4 py-2 text-sm font-medium transition-colors hover:text-white rounded-full group"
+                  className="relative px-5 py-2 text-sm font-medium transition-all rounded-full group"
                 >
                   {isActive && (
                     <motion.span
                       layoutId="activeSection"
-                      className="absolute inset-0 bg-white/10 rounded-full"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 } as const}
+                      className="absolute inset-0 bg-white/10 rounded-full border border-white/5"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
-                  <span className={`relative z-10 ${isActive ? 'text-brand-accent' : 'text-brand-gray group-hover:text-white'}`}>
+                  <span className={`relative z-10 transition-colors ${isActive ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>
                     {link.label}
                   </span>
                 </a>
               );
             })}
-
-            <a 
-              href="#contact" 
-              className={`ml-4 rounded-full px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:shadow-brand-accent/25 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-brand-accent ${
-                activeSection === 'contact' 
-                  ? 'bg-gradient-to-r from-sky-400 to-brand-accent ring-2 ring-white/20' 
-                  : 'bg-brand-accent hover:bg-sky-400'
-              }`}
-            >
-              Programează-te
-            </a>
           </nav>
 
+          {/* DESKTOP CTA BUTTON */}
+          <div className="hidden md:block">
+             <a 
+              href="#contact" 
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-all hover:bg-sky-400 hover:shadow-brand-accent/40 active:scale-95"
+            >
+              <span className="relative z-10">Programează-te</span>
+              <div className="absolute inset-0 -z-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0" />
+            </a>
+          </div>
+
+          {/* MOBILE BURGER */}
           <div className="md:hidden">
             <button 
               onClick={() => setIsMenuOpen(true)} 
               aria-label="Deschide meniul" 
-              className="p-2 text-brand-gray hover:text-white transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-brand-accent"
+              className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
             >
-              <Menu className="h-7 w-7" />
+              <Menu className="h-8 w-8" />
             </button>
           </div>
         </div>
       </motion.header>
       
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 z-[59] bg-black/80 backdrop-blur-sm"
+              className="fixed inset-0 z-[59] bg-black/60 backdrop-blur-sm"
             />
             
+            {/* Side Drawer */}
             <motion.div
               key="mobile-menu" 
               variants={menuVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm z-[60] bg-brand-dark border-l border-white/10 shadow-2xl"
+              className="fixed top-0 right-0 h-full w-[85%] max-w-sm z-[60] bg-[#0f1115] border-l border-white/10 shadow-2xl"
             >
-              <div className="p-6 h-full flex flex-col relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-                <div className="flex justify-between items-center mb-12 relative z-10">
-                  <span className="font-bold text-xl tracking-wider text-white">
-                    DIAMOND<span className="text-brand-accent">.</span>
-                  </span>
+              <div className="flex flex-col h-full p-6">
+                
+                {/* Mobile Header */}
+                <div className="flex justify-between items-center mb-10">
+                   <div className="flex items-center gap-2">
+                      <Gem className="h-6 w-6 text-brand-accent" />
+                      <span className="font-bold text-lg text-white tracking-wide">MENU</span>
+                   </div>
                   <button 
                     onClick={() => setIsMenuOpen(false)} 
                     aria-label="Închide meniul" 
-                    className="p-2 text-brand-gray hover:text-white hover:bg-white/10 rounded-full transition-all"
+                    className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-all"
                   >
                     <X className="h-6 w-6" />
                   </button>
                 </div>
 
-                <nav className="flex flex-col gap-6 relative z-10">
-                  {navLinks.map((link) => {
+                {/* Mobile Links */}
+                <nav className="flex flex-col gap-2">
+                  {navLinks.map((link, i) => {
                      const isActive = activeSection === link.href.substring(1);
                      return (
                       <motion.a 
                         key={link.href} 
-                        href={link.href} 
-                        variants={itemVariants}
+                        href={link.href}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 + i * 0.1 }}
                         onClick={() => setIsMenuOpen(false)} 
-                        className={`text-2xl font-semibold transition-colors flex items-center gap-3 ${
-                          isActive ? 'text-brand-accent' : 'text-white hover:text-brand-accent'
+                        className={`text-xl font-medium px-4 py-3 rounded-xl transition-all flex items-center justify-between ${
+                          isActive 
+                            ? 'bg-white/10 text-brand-accent' 
+                            : 'text-gray-300 hover:bg-white/5 hover:text-white'
                         }`}
                       >
-                        {isActive && <motion.div layoutId="mobileIndicator" className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
                         {link.label}
+                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-brand-accent" />}
                       </motion.a>
                     )
                   })}
                 </nav>
 
-                <motion.div variants={itemVariants} className="mt-auto relative z-10 mb-8">
-                  <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                    <h4 className="text-brand-gray text-sm mb-2">Gata de recondiționare?</h4>
+                {/* Mobile CTA */}
+                <div className="mt-auto mb-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="p-6 rounded-2xl bg-gradient-to-br from-brand-accent/10 to-transparent border border-brand-accent/20 text-center"
+                  >
+                    <h4 className="text-gray-300 text-sm mb-4">Vrei să redai strălucirea mașinii?</h4>
                     <a 
                       href="#contact" 
                       onClick={() => setIsMenuOpen(false)}
-                      className="block w-full rounded-xl bg-brand-accent py-4 text-center text-lg font-bold text-white shadow-lg transition-transform active:scale-95"
+                      className="block w-full rounded-xl bg-brand-accent py-3.5 text-base font-bold text-white shadow-lg shadow-brand-accent/20 transition-transform active:scale-95 hover:bg-sky-400"
                     >
-                      Rezervă acum
+                      Programează o vizită
                     </a>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </div>
+
               </div>
             </motion.div>
           </>
