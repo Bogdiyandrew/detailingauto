@@ -2,6 +2,7 @@ import { Poppins } from 'next/font/google';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import './globals.css';
+import { Metadata } from 'next';
 
 const poppins = Poppins({
   subsets: ['latin'],

@@ -1,23 +1,44 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faTiktok } from '@fortawesome/free-brands-svg-icons';
 
 const Hero = () => {
   const targetRef = useRef<HTMLElement>(null);
+  // Folosim un state pentru a detecta mobilul și a dezactiva animațiile grele
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0.3, 0.85], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  // Smooth spring pentru scroll ca sa nu fie sacadat, dar DOAR pe desktop
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  // Transformările se aplică doar dacă NU suntem pe mobil.
+  // Pe mobil valorile rămân statice (0% și 1).
+  const y = useTransform(smoothProgress, [0, 1], ["0%", isMobile ? "0%" : "50%"]);
+  const opacity = useTransform(smoothProgress, [0.3, 0.85], [1, 0]);
+  const scale = useTransform(smoothProgress, [0, 1], [1, isMobile ? 1 : 1.1]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -30,8 +51,13 @@ const Hero = () => {
     },
   };
 
+  // Eliminăm blur-ul pe mobil pentru performanță
   const itemVariants = {
-    hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
+    hidden: { 
+      opacity: 0, 
+      y: 30, 
+      filter: isMobile ? "blur(0px)" : "blur(10px)" // Optimizare critică
+    },
     visible: { 
       opacity: 1, 
       y: 0, 
@@ -41,10 +67,12 @@ const Hero = () => {
   };
 
   return (
-    <section ref={targetRef} className="relative flex h-screen items-center justify-center overflow-hidden bg-brand-dark">
+    // Folosim h-dvh (dynamic view height) pentru a evita jump-urile pe mobil când dispare bara de adresă
+    <section ref={targetRef} className="relative flex h-dvh items-center justify-center overflow-hidden bg-brand-dark">
       <motion.div 
         style={{ y, scale }}
-        className="absolute inset-0 z-0"
+        // will-change-transform spune browserului să pregătească GPU-ul
+        className="absolute inset-0 z-0 will-change-transform"
       >
         <Image
           src="/hero-desktop.webp"
@@ -53,6 +81,7 @@ const Hero = () => {
           className="hidden object-cover md:block"
           priority
           quality={90}
+          sizes="100vw"
         />
         <Image
           src="/hero-mobile.webp"
@@ -60,34 +89,36 @@ const Hero = () => {
           fill
           className="block object-cover md:hidden"
           priority
-          quality={80}
+          // Reducem calitatea pe mobil pentru încărcare rapidă și render ușor
+          quality={70} 
+          sizes="100vh"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-brand-dark" />
       </motion.div>
 
       <motion.div 
         style={{ opacity }}
-        className="relative z-10 mx-auto max-w-5xl px-6 text-center"
+        className="relative z-10 mx-auto max-w-5xl px-6 text-center will-change-transform"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         <motion.h1 
-        className="mb-6 text-5xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl drop-shadow-2xl"
-        variants={itemVariants}
-      >
-        Mașina ta, din nou <br className="hidden md:block" />
-        <span className="bg-gradient-to-r from-brand-accent to-sky-500 bg-clip-text text-transparent">
-        CA ÎN PRIMA ZI
-        </span>
-</motion.h1>
+          className="mb-6 text-5xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl drop-shadow-2xl"
+          variants={itemVariants}
+        >
+          Mașina ta, din nou <br className="hidden md:block" />
+          <span className="bg-gradient-to-r from-brand-accent to-sky-500 bg-clip-text text-transparent">
+          CA ÎN PRIMA ZI
+          </span>
+        </motion.h1>
 
-<motion.p 
-  className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-300 md:text-xl"
-  variants={itemVariants}
->
-  Detailing auto profesional în Pitești. Curățare în profunzime, polish și protecție ceramică la standarde de reprezentanță.
-</motion.p>
+        <motion.p 
+          className="mx-auto mb-10 max-w-2xl text-lg font-light leading-relaxed text-gray-300 md:text-xl"
+          variants={itemVariants}
+        >
+          Detailing auto profesional în Pitești. Curățare în profunzime, polish și protecție ceramică la standarde de reprezentanță.
+        </motion.p>
         
         <motion.div
           variants={itemVariants}
