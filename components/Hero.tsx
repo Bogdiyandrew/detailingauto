@@ -115,7 +115,8 @@ const Hero = () => {
   return (
     <section 
       ref={targetRef} 
-      className="relative flex h-dvh items-start pt-32 md:pt-0 md:items-center overflow-hidden bg-brand-dark"
+      // MODIFICARE: Folosim min-h-[100dvh] pentru a gestiona bara Safari si justify-center pentru a centra vertical continutul pe mobil
+      className="relative flex min-h-[100dvh] flex-col justify-center items-center md:items-start overflow-hidden bg-brand-dark pb-10 pt-20 md:pb-0 md:pt-0"
     >
       <motion.div 
         style={{ y, scale }}
@@ -143,7 +144,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/90" />
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto">
+      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-[-5vh] md:mt-0">
         
         <div className="flex flex-col items-center md:items-start max-w-4xl">
           
@@ -189,7 +190,7 @@ const Hero = () => {
           >
             <div className="h-[2px] w-12 bg-sky-500/50" />
             
-            <p className="mb-8 max-w-xl text-base md:text-xl font-light leading-relaxed text-slate-300 text-center md:text-left">
+            <p className="mb-6 md:mb-8 max-w-xl text-base md:text-xl font-light leading-relaxed text-slate-300 text-center md:text-left">
               Detailing auto profesional în <span className="text-white font-medium">Pitești</span>. 
               Curățare în profunzime, polish și protecție ceramică.
             </p>
@@ -200,49 +201,75 @@ const Hero = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-75 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-3 sm:flex-row md:justify-start"
+            // MODIFICARE: Am scos mt-75 si am pus mt-8. Pe mobil, iconitele sociale sunt aici.
+            className="mt-8 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
           >
-            <Link
-              href="/#contact"
-              className="group w-full sm:w-auto justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-brand-accent/20 transition-all hover:scale-105 hover:bg-sky-400 hover:shadow-brand-accent/40 focus:outline-none focus:ring-4 focus:ring-brand-accent/30"
-            >
-              <span className="relative z-10">Programează-te</span>
-              <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              <div className="absolute inset-0 -z-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0" />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <Link
+                href="/#contact"
+                className="group w-full sm:w-auto justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-brand-accent/20 transition-all hover:scale-105 hover:bg-sky-400 hover:shadow-brand-accent/40 focus:outline-none focus:ring-4 focus:ring-brand-accent/30"
+                >
+                <span className="relative z-10">Programează-te</span>
+                <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <div className="absolute inset-0 -z-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0" />
+                </Link>
 
-            <Link
-              href="/#servicii"
-              className="group w-full sm:w-auto justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10"
-            >
-              Descoperă serviciile
-            </Link>
+                <Link
+                href="/#servicii"
+                className="group w-full sm:w-auto justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10"
+                >
+                Descoperă serviciile
+                </Link>
+            </div>
+
+            {/* MODIFICARE: Iconite Sociale DOAR PENTRU MOBIL - integrate sub butoane */}
+            <div className="flex gap-4 mt-4 md:hidden">
+                 <a 
+                  href="https://wa.me/40xxxxxx" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all active:scale-95"
+                >
+                  <FontAwesomeIcon icon={faWhatsapp} className="h-5 w-5" />
+                </a>
+                
+                <a 
+                  href="https://www.tiktok.com/@_.diamond.detailing._" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all active:scale-95"
+                >
+                  <FontAwesomeIcon icon={faTiktok} className="h-4 w-4" />
+                </a>
+            </div>
+
           </motion.div>
         </div>
       </div>
 
+      {/* MODIFICARE: Iconite Sociale DOAR PENTRU DESKTOP - Pozitionare absoluta */}
       <motion.div 
-        className="absolute bottom-6 left-6 z-20 flex gap-4 md:bottom-10 md:left-10"
+        className="hidden md:flex absolute bottom-10 left-10 z-20 gap-4"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
       >
         <a 
-          href="https://wa.me/40xx" 
+          href="https://wa.me/40xxxxxx" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110"
         >
-          <FontAwesomeIcon icon={faWhatsapp} className="h-5 w-5 md:h-6 md:w-6" />
+          <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
         </a>
         
         <a 
           href="https://www.tiktok.com/@_.diamond.detailing._" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110"
         >
-          <FontAwesomeIcon icon={faTiktok} className="h-4 w-4 md:h-5 md:w-5" />
+          <FontAwesomeIcon icon={faTiktok} className="h-5 w-5" />
         </a>
       </motion.div>
     </section>
