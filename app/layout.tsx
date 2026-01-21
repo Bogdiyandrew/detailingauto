@@ -10,6 +10,17 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
+// --- AICI ESTE MODIFICAREA ---
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Detailing Auto Pitești', 
+    default: 'Detailing Auto Pitești',
+  },
+  description: 'Servicii profesionale de detailing auto interior și exterior în Pitești. Polish, curățare tapițerie, protecție ceramică.',
+  keywords: ['detailing auto', 'pitesti', 'polish', 'curatare auto', 'cosmetica auto'],
+};
+// -----------------------------
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ro" style={{ scrollBehavior: 'smooth' }}>

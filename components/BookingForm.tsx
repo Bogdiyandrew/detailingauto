@@ -326,7 +326,7 @@ const BookingFormContent = () => {
                       {isSubmitting ? (
                         <LoaderCircle className="animate-spin h-5 w-5" />
                       ) : (
-                        'Confirmă Rezervarea'
+                        'Confirmă'
                       )}
                   </button>
                </div>

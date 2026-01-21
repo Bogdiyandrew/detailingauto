@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 const servicesData = [
   {
     title: 'Pachet 1',
-    subtitle: 'Curățare Standard',
+    subtitle: 'Descriere nr1',
     price: '300',
     features: [
       'Spălare exterioară',
@@ -20,7 +20,7 @@ const servicesData = [
   },
   {
     title: 'Pachet 2',
-    subtitle: 'Deep Clean & Polish',
+    subtitle: 'Descriere nr2',
     price: '400',
     features: [
       'Tot ce include Pachet 1',
@@ -33,7 +33,7 @@ const servicesData = [
   },
   {
     title: 'Pachet 3',
-    subtitle: 'Full Detailing & Ceramic',
+    subtitle: 'Descriere nr3',
     price: '800',
     features: [
       'Tot ce include Pachet 2',
