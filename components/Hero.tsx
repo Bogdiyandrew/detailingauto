@@ -202,7 +202,7 @@ const Hero = () => {
             whileInView="visible"
             viewport={{ once: true }}
             // MODIFICARE: Am scos mt-75 si am pus mt-8. Pe mobil, iconitele sociale sunt aici.
-            className="mt-8 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
+            className="mt-50 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
           >
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <Link
