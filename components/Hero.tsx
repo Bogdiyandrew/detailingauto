@@ -209,7 +209,7 @@ const Hero = () => {
             whileInView="visible"
             viewport={{ once: true }}
             // MODIFICARE 3: mt-8 pentru o spațiere corectă față de text
-            className="mt-8 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
+            className="mt-20 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
           >
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <Link
