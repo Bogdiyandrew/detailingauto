@@ -8,6 +8,7 @@ import { ArrowRight } from 'lucide-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faTiktok } from '@fortawesome/free-brands-svg-icons';
 
+// --- Componenta pentru text animat cuvânt cu cuvânt ---
 const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, className?: string, isMobile: boolean, delay?: number }) => {
   const words = text.split(" ");
 
@@ -58,6 +59,7 @@ const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, 
   );
 };
 
+// --- Componenta Principală Hero ---
 const Hero = () => {
   const targetRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(true);
@@ -115,9 +117,9 @@ const Hero = () => {
   return (
     <section 
       ref={targetRef} 
-      // MODIFICARE: Folosim min-h-[100dvh] pentru a gestiona bara Safari si justify-center pentru a centra vertical continutul pe mobil
       className="relative flex min-h-[100dvh] flex-col justify-center items-center md:items-start overflow-hidden bg-brand-dark pb-10 pt-20 md:pb-0 md:pt-0"
     >
+      {/* Background Parallax */}
       <motion.div 
         style={{ y, scale }}
         className="absolute inset-0 z-0 will-change-transform"
@@ -144,7 +146,10 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/90" />
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-[-5vh] md:mt-0">
+      {/* MODIFICARE 1: mt-12 pe mobil (în loc de -5vh) 
+         Asta împinge conținutul mai jos, sub zona de logo/header 
+      */}
+      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-12 md:mt-0">
         
         <div className="flex flex-col items-center md:items-start max-w-4xl">
           
@@ -158,6 +163,7 @@ const Hero = () => {
             </div>
             
             <div className="relative w-full text-center md:text-left">
+              {/* Glow Effect */}
               <motion.div 
                  initial={{ opacity: 0, scale: 0.8 }}
                  whileInView={{ opacity: 1, scale: 1 }}
@@ -188,7 +194,8 @@ const Hero = () => {
             viewport={{ once: true }}
             className="flex flex-col items-center md:items-start gap-4 w-full"
           >
-            <div className="h-[2px] w-12 bg-sky-500/50" />
+            {/* MODIFICARE 2: Linia este 'hidden' pe mobil și 'block' pe desktop */}
+            <div className="hidden md:block h-[2px] w-12 bg-sky-500/50" />
             
             <p className="mb-6 md:mb-8 max-w-xl text-base md:text-xl font-light leading-relaxed text-slate-300 text-center md:text-left">
               Detailing auto profesional în <span className="text-white font-medium">Pitești</span>. 
@@ -201,8 +208,8 @@ const Hero = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            // MODIFICARE: Am scos mt-75 si am pus mt-8. Pe mobil, iconitele sociale sunt aici.
-            className="mt-50 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
+            // MODIFICARE 3: mt-8 pentru o spațiere corectă față de text
+            className="mt-8 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
           >
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                 <Link
@@ -222,7 +229,7 @@ const Hero = () => {
                 </Link>
             </div>
 
-            {/* MODIFICARE: Iconite Sociale DOAR PENTRU MOBIL - integrate sub butoane */}
+            {/* Social Icons - DOAR PENTRU MOBIL - integrate sub butoane */}
             <div className="flex gap-4 mt-4 md:hidden">
                  <a 
                   href="https://wa.me/40xxxxxx" 
@@ -247,7 +254,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* MODIFICARE: Iconite Sociale DOAR PENTRU DESKTOP - Pozitionare absoluta */}
+      {/* Social Icons - DOAR PENTRU DESKTOP - Poziționare absolută */}
       <motion.div 
         className="hidden md:flex absolute bottom-10 left-10 z-20 gap-4"
         initial={{ opacity: 0, x: -20 }}

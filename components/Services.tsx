@@ -5,6 +5,7 @@ import { motion, Variants } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 const servicesData = [
+  // ... datele tale rămân la fel ...
   {
     title: 'Pachet 1',
     subtitle: 'Descriere nr1',
@@ -46,18 +47,16 @@ const servicesData = [
   },
 ];
 
-// 1. Definim variantele în afara componentei pentru a evita re-randarea inutilă
-// Acest lucru stabilizează animația
 const cardVariants: Variants = {
   hidden: { 
     opacity: 0, 
-    y: 30 
+    y: 50 // Am mărit puțin distanța pentru un efect mai clar
   },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: { 
-      duration: 0.5,
+      duration: 0.6, // Puțin mai lent pentru fluiditate
       ease: "easeOut"
     }
   }
@@ -67,6 +66,7 @@ const Services = () => {
   const router = useRouter();
   
   const handleSelectPackage = (serviceTitle: string) => {
+    // ... logica ta rămâne la fel ...
     const contactSection = document.getElementById('contact');
     const newUrl = `${window.location.pathname}#contact?service=${encodeURIComponent(serviceTitle)}`;
     window.history.pushState({}, '', newUrl);
@@ -85,22 +85,16 @@ const Services = () => {
   return (
     <section id="servicii" className="relative bg-brand-dark py-24 overflow-hidden">
       
-      {/* Background simplificat pentru performanță maximă */}
+      {/* Background elements ... */}
       <motion.div 
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.2, 0.3, 0.2], 
-        }}
+        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-accent/10 rounded-full blur-[80px] pointer-events-none will-change-transform" 
+        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-accent/10 rounded-full blur-[80px] pointer-events-none" 
       />
       <motion.div 
-        animate={{ 
-          scale: [1, 1.2, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[80px] pointer-events-none will-change-transform" 
+        className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[80px] pointer-events-none" 
       />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
@@ -125,21 +119,26 @@ const Services = () => {
           {servicesData.map((service, index) => (
             <motion.div
               key={index}
-              // 2. Folosim variantele definite sus
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
-              // 3. FIX MAJOR: 'margin' negativ înseamnă că animația începe mai devreme
-              // 'amount: 0' înseamnă că animația pornește la primul pixel vizibil
-              // Asta previne efectul de "clipire"
-              viewport={{ once: true, amount: 0, margin: "0px 0px -50px 0px" }}
+              // MODIFICARE IMPORTANTA: 
+              // Am scos margin-ul negativ mare care cauza probleme pe mobil.
+              // amount: 0.1 înseamnă că animația pornește când 10% din element e vizibil.
+              viewport={{ once: true, amount: 0.1 }}
+              
+              // MODIFICARE IMPORTANTA AICI JOS:
+              // 1. Am scos 'transition-all duration-300 will-change-transform'
+              // 2. Am păstrat doar clasele de styling static.
               className={`
-                relative flex flex-col justify-between rounded-3xl p-8 xl:p-10 transition-all duration-300 will-change-transform
+                relative flex flex-col justify-between rounded-3xl p-8 xl:p-10
                 ${service.isFeatured 
-                  ? 'bg-white/10 ring-2 ring-brand-accent shadow-2xl shadow-brand-accent/20 z-10 lg:scale-105' 
-                  : 'bg-white/5 ring-1 ring-white/10 hover:bg-white/10 hover:ring-white/20'
+                  ? 'bg-white/10 ring-2 ring-brand-accent shadow-2xl shadow-brand-accent/20 z-10' 
+                  : 'bg-white/5 ring-1 ring-white/10'
                 }
               `}
+              // Dacă vrei efect de hover, folosește Framer Motion, nu CSS, pentru a evita conflictul
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
               {service.isFeatured && (
                 <div className="absolute -top-5 left-0 right-0 mx-auto w-40 rounded-full bg-gradient-to-r from-brand-accent to-blue-600 px-3 py-1 text-center text-sm font-bold text-white shadow-lg flex items-center justify-center gap-1">
@@ -178,6 +177,7 @@ const Services = () => {
 
               <button
                 onClick={() => handleSelectPackage(service.title)}
+                // Aici la buton poți lăsa transition-all pentru că butonul nu e animat de Framer Motion
                 className={`
                   mt-8 block w-full rounded-xl py-3 px-3 text-center text-sm font-bold leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 transition-transform duration-200 active:scale-95
                   ${service.isFeatured
