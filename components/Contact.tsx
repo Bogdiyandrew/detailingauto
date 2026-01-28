@@ -9,33 +9,31 @@ const Contact = () => {
     <section id="contact" className="relative bg-brand-dark py-24 overflow-hidden">
       
       {/* --- BACKGROUND IMAGE (DOAR DESKTOP) --- */}
-      {/* - hidden: ascuns pe mobil
-         - lg:block: vizibil doar pe ecrane mari (laptop/PC)
-         - object-cover: taie poza ca să umple tot ecranul fără să o deformeze
-      */}
       <div className="absolute inset-0 hidden lg:block">
         <img 
           src="/contact.jpeg" 
           alt="Atelier Diamond Detailing" 
           className="h-full w-full object-cover opacity-60" 
         />
-        {/* Strat gradient peste poză ca să rămână scrisul lizibil */}
         <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-brand-dark/80" />
       </div>
 
-      {/* --- BACKGROUND MOBIL (Rămâne cel vechi, simplu) --- */}
+      {/* --- BACKGROUND MOBIL --- */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-accent/5 rounded-full blur-[150px] pointer-events-none opacity-50 lg:hidden" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           
-          {/* Coloana Stânga - Informații directe */}
+          {/* MODIFICARE AICI:
+              - Am adaugat 'order-2' (pe mobil apare al doilea)
+              - Am adaugat 'lg:order-1' (pe desktop ramane primul, in stanga)
+          */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col gap-8"
+            className="flex flex-col gap-8 order-2 lg:order-1" 
           >
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-4">
@@ -106,13 +104,16 @@ const Contact = () => {
 
           </motion.div>
 
-          {/* Coloana Dreapta - Formularul */}
+          {/* MODIFICARE AICI (Coloana Dreapta - Formularul):
+              - Am adaugat 'order-1' (pe mobil apare PRIMUL)
+              - Am adaugat 'lg:order-2' (pe desktop revine pe locul doi, in dreapta)
+          */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative"
+            className="relative order-1 lg:order-2" 
           >
             <div className="relative bg-white/5 backdrop-blur-md border border-white/10 p-6 sm:p-8 rounded-2xl shadow-xl">
               <div className="mb-8 border-b border-white/10 pb-6">

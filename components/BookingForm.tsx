@@ -18,29 +18,29 @@ import {
   Sparkle, 
   ArrowLeft, 
   Check,
-  Edit2
+  AlertCircle // Iconita pentru eroare
 } from 'lucide-react';
 
 // --- DATE SERVICII ---
 const services = [
   { 
-    id: 'standard', 
-    name: 'Pachet 1', 
-    description: 'Spălare exterior + ceară',
+    id: 'refresh', 
+    name: 'Refresh', 
+    description: 'Perfect pentru întreținere lunarǎ',
     icon: <CarFront className="w-6 h-6 sm:w-8 sm:h-8" />,
     color: 'from-blue-400 to-blue-600'
   },
   { 
-    id: 'premium', 
-    name: 'Pachet 2', 
-    description: 'Detailing interior complet',
+    id: 'deepclean', 
+    name: 'Deep clean', 
+    description: 'Scoate mizeria din tapițerie și dă luciu',
     icon: <Sparkle className="w-6 h-6 sm:w-8 sm:h-8" />,
     color: 'from-purple-400 to-purple-600'
   },
   { 
-    id: 'showroom', 
-    name: 'Pachet 3', 
-    description: 'Full detailing + ceramică',
+    id: 'reset', 
+    name: 'Reset total', 
+    description: 'O aducem cât mai aproape de starea de fabrică',
     icon: <Gem className="w-6 h-6 sm:w-8 sm:h-8" />,
     color: 'from-emerald-400 to-emerald-600'
   },
@@ -59,7 +59,11 @@ const BookingFormContent = () => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  
+  // State-uri pentru formular si validare
+  const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
 
   // --- LOGICĂ URL ---
   useEffect(() => {
@@ -69,13 +73,10 @@ const BookingFormContent = () => {
       const isValidService = services.some(s => s.name === serviceParam);
       
       if (isValidService) {
-        // Actualizăm serviciul doar dacă e diferit
         setSelectedService(prev => prev !== serviceParam ? serviceParam : prev);
         
-        // Trecem la pasul 2 doar dacă suntem la pasul 1
         setStep(currentStep => {
             if (currentStep === 1) {
-                // Dacă e prima dată când intrăm, setăm data de azi
                 setSelectedDate(new Date());
                 return 2;
             }
@@ -83,7 +84,7 @@ const BookingFormContent = () => {
         });
       }
     }
-  }, [searchParams]); // Dependență stabilă doar pe searchParams
+  }, [searchParams]);
 
   const handleServiceSelect = (serviceName: string) => {
     setSelectedService(serviceName);
@@ -108,8 +109,15 @@ const BookingFormContent = () => {
     setSelectedDate(undefined);
     setSelectedTime(null);
     setSubmissionStatus('idle');
+    setName('');
     setPhoneNumber('');
+    setErrors({});
     router.replace(pathname, { scroll: false });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    if (errors.name) setErrors(prev => ({ ...prev, name: undefined }));
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,11 +125,33 @@ const BookingFormContent = () => {
     const numbersOnly = value.replace(/\D/g, '');
     const limitedNumbers = numbersOnly.slice(0, 10);
     setPhoneNumber(limitedNumbers);
+    if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
+  };
+
+  const validateForm = () => {
+    const newErrors: { name?: string; phone?: string } = {};
+    
+    if (!name.trim() || name.length < 3) {
+        newErrors.name = 'Te rugăm să introduci numele complet.';
+    }
+
+    if (phoneNumber.length < 10) {
+        newErrors.phone = 'Numărul de telefon este invalid.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+        return; // Oprește execuția dacă sunt erori
+    }
+
     setIsSubmitting(true);
+    // Simulare request API
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsSubmitting(false);
     setSubmissionStatus('success');
@@ -142,7 +172,7 @@ const BookingFormContent = () => {
         </p>
         <button
           onClick={resetForm}
-          className="rounded-xl bg-white/10 px-8 py-3 text-sm font-semibold text-white hover:bg-white/20 transition-all border border-white/5 active:scale-95"
+          className="cursor-pointer rounded-xl bg-white/10 px-8 py-3 text-sm font-semibold text-white hover:bg-white/20 transition-all border border-white/5 active:scale-95"
         >
           Fă o altă programare
         </button>
@@ -165,10 +195,10 @@ const BookingFormContent = () => {
         .rdp-weekday { color: #38bdf8 !important; }
         .rdp-nav_button svg { color: #38bdf8 !important; fill: #38bdf8 !important; stroke: #38bdf8 !important; }
         .rdp-chevron { fill: #38bdf8 !important; color: #38bdf8 !important; }
-        .rdp-day { font-size: 0.95rem; color: #e5e7eb; }
+        .rdp-day { font-size: 0.95rem; color: #e5e7eb; cursor: pointer; }
         .rdp-caption_label { text-transform: capitalize; font-size: 1.1rem; color: white; }
         .rdp-head_cell { font-size: 0.8rem; text-transform: uppercase; }
-        .rdp-day_disabled { opacity: 0.25 !important; cursor: not-allowed; text-decoration: line-through; }
+        .rdp-day_disabled { opacity: 0.25 !important; cursor: not-allowed !important; text-decoration: line-through; }
         .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
             background-color: rgba(255,255,255,0.1) !important;
             border-radius: 8px;
@@ -178,7 +208,7 @@ const BookingFormContent = () => {
             color: white !important;
             box-shadow: 0 0 15px rgba(56,189,248,0.3);
         }
-        .rdp-nav_button { background-color: rgba(255,255,255,0.05); }
+        .rdp-nav_button { background-color: rgba(255,255,255,0.05); cursor: pointer; }
         .rdp-nav_button:hover { background-color: rgba(255,255,255,0.15); }
       `}</style>
 
@@ -200,7 +230,7 @@ const BookingFormContent = () => {
               <button
                 key={service.id}
                 onClick={() => handleServiceSelect(service.name)}
-                className="group relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left w-full"
+                className="cursor-pointer group relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all text-left w-full"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-sky-400/0 via-sky-400/5 to-sky-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-x-[-100%] group-hover:translate-x-[100%]" />
                 
@@ -222,18 +252,17 @@ const BookingFormContent = () => {
       {step === 2 && (
         <div className="flex-1 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300">
           
-          {/* --- ZONA MODIFICATĂ: HEADER SUMMARY --- */}
           <div className="mb-4 flex items-center justify-between bg-white/5 p-3 rounded-xl border border-white/5">
-             {/* BUTON MODIFICĂ (STÂNGA) */}
+             {/* BUTON MODIFICĂ */}
              <button 
                 onClick={handleModifyService} 
-                className="flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-white px-2 py-1.5 rounded-lg hover:bg-white/5 transition-all group"
+                className="cursor-pointer flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-white px-2 py-1.5 rounded-lg hover:bg-white/5 transition-all group"
              >
                 <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
                 <span>Modifică</span>
              </button>
 
-             {/* DETALII PACHET (DREAPTA) */}
+             {/* DETALII PACHET */}
              <div className="flex items-center gap-3 flex-row-reverse text-right">
                 <div className="p-2 bg-sky-400/20 rounded-lg text-sky-400">
                     <Sparkle size={16} />
@@ -244,7 +273,6 @@ const BookingFormContent = () => {
                 </div>
              </div>
           </div>
-          {/* --- SFÂRȘIT ZONA MODIFICATĂ --- */}
 
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             <div className="bg-gradient-to-b from-white/5 to-transparent rounded-2xl border border-white/5 p-4 mb-6 flex justify-center w-full">
@@ -259,14 +287,14 @@ const BookingFormContent = () => {
                 showOutsideDays
                 classNames={{
                     nav: "flex gap-2 absolute right-0 top-0",
-                    nav_button: "w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors border border-white/10",
+                    nav_button: "w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors border border-white/10 cursor-pointer",
                     caption: "relative flex items-center justify-start h-10 mb-4 pl-2",
                     table: "w-full border-collapse",
                     head_row: "flex w-full",
                     head_cell: "w-10 font-bold text-[0.8rem] uppercase mb-2",
                     row: "flex w-full mt-1",
                     cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20",
-                    day: "h-10 w-10 p-0 font-normal aria-selected:opacity-100 hover:bg-white/10 rounded-lg transition-colors text-gray-300",
+                    day: "h-10 w-10 p-0 font-normal aria-selected:opacity-100 hover:bg-white/10 rounded-lg transition-colors text-gray-300 cursor-pointer",
                     day_selected: "bg-sky-500 text-white hover:bg-sky-600 hover:text-white focus:bg-sky-500 focus:text-white",
                     day_today: "bg-white/5 text-white border border-white/20",
                     day_outside: "text-gray-600 opacity-50",
@@ -295,7 +323,7 @@ const BookingFormContent = () => {
                   <button
                     key={time}
                     onClick={() => setSelectedTime(time)}
-                    className={`py-2.5 rounded-lg text-sm font-bold border transition-all duration-200 ${
+                    className={`cursor-pointer py-2.5 rounded-lg text-sm font-bold border transition-all duration-200 ${
                       selectedTime === time 
                         ? 'bg-sky-400 text-white border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.4)] scale-105' 
                         : 'bg-white/5 text-gray-400 border-white/5 hover:border-white/20 hover:bg-white/10 hover:text-white'
@@ -312,7 +340,7 @@ const BookingFormContent = () => {
             <button 
               onClick={() => setStep(3)} 
               disabled={!selectedDate || !selectedTime} 
-              className="group w-full relative overflow-hidden rounded-xl bg-sky-400 px-4 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-400/20 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+              className="cursor-pointer group w-full relative overflow-hidden rounded-xl bg-sky-400 px-4 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-400/20 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Continuă <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform"/>
@@ -327,7 +355,7 @@ const BookingFormContent = () => {
         <div className="flex-1 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300">
           <button 
             onClick={() => setStep(2)}
-            className="self-start mb-4 text-gray-400 hover:text-white flex items-center gap-1 text-sm font-medium transition-colors"
+            className="cursor-pointer self-start mb-4 text-gray-400 hover:text-white flex items-center gap-1 text-sm font-medium transition-colors"
           >
             <ArrowLeft size={16} /> Înapoi
           </button>
@@ -352,44 +380,63 @@ const BookingFormContent = () => {
               </div>
           </div>
 
-          <form className="flex-1 flex flex-col gap-4" onSubmit={handleFormSubmit}>
+          {/* Adaugat noValidate pentru a dezactiva mesajele browserului */}
+          <form className="flex-1 flex flex-col gap-4" onSubmit={handleFormSubmit} noValidate>
                <div className="space-y-1.5">
                   <label htmlFor="name" className="text-xs font-bold text-gray-400 uppercase ml-1">Nume Complet</label>
                   <div className="relative group">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-sky-400 transition-colors" size={18} />
+                    <User className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${errors.name ? 'text-red-400' : 'text-gray-500 group-focus-within:text-sky-400'}`} size={18} />
                     <input 
                         type="text" 
                         id="name" 
-                        required 
+                        value={name}
+                        onChange={handleNameChange}
                         placeholder="Nume Prenume"
-                        className="w-full rounded-xl border border-white/10 bg-black/20 pl-10 pr-4 py-3.5 text-white placeholder-gray-600 focus:border-sky-400 focus:bg-white/5 focus:ring-1 focus:ring-sky-400 transition-all outline-none" 
+                        className={`w-full rounded-xl border bg-black/20 pl-10 pr-4 py-3.5 text-white placeholder-gray-600 transition-all outline-none 
+                            ${errors.name 
+                                ? 'border-red-500/50 focus:border-red-500 focus:bg-red-500/5' 
+                                : 'border-white/10 focus:border-sky-400 focus:bg-white/5 focus:ring-1 focus:ring-sky-400'
+                            }`}
                     />
                   </div>
+                  {errors.name && (
+                      <p className="text-xs text-red-400 flex items-center gap-1 ml-1 animate-in slide-in-from-top-1 fade-in">
+                          <AlertCircle size={12} /> {errors.name}
+                      </p>
+                  )}
                </div>
+
                <div className="space-y-1.5">
                   <label htmlFor="phone" className="text-xs font-bold text-gray-400 uppercase ml-1">Număr de Telefon</label>
                   <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-sky-400 transition-colors font-bold text-sm">+40</div>
+                    <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors font-bold text-sm ${errors.phone ? 'text-red-400' : 'text-gray-500 group-focus-within:text-sky-400'}`}>+40</div>
                     <input 
                         type="tel" 
                         id="phone" 
-                        required 
                         value={phoneNumber}
                         onChange={handlePhoneChange}
                         placeholder="7xx xxx xxx"
-                        pattern="[0-9]{10}"
                         inputMode="numeric"
                         maxLength={10}
-                        className="w-full rounded-xl border border-white/10 bg-black/20 pl-12 pr-4 py-3.5 text-white placeholder-gray-600 focus:border-sky-400 focus:bg-white/5 focus:ring-1 focus:ring-sky-400 transition-all outline-none" 
+                        className={`w-full rounded-xl border bg-black/20 pl-12 pr-4 py-3.5 text-white placeholder-gray-600 transition-all outline-none
+                             ${errors.phone 
+                                ? 'border-red-500/50 focus:border-red-500 focus:bg-red-500/5' 
+                                : 'border-white/10 focus:border-sky-400 focus:bg-white/5 focus:ring-1 focus:ring-sky-400'
+                            }`}
                     />
                   </div>
+                   {errors.phone && (
+                      <p className="text-xs text-red-400 flex items-center gap-1 ml-1 animate-in slide-in-from-top-1 fade-in">
+                          <AlertCircle size={12} /> {errors.phone}
+                      </p>
+                  )}
                </div>
                
                <div className="mt-auto pt-6">
                   <button 
                     type="submit" 
                     disabled={isSubmitting} 
-                    className="w-full rounded-xl bg-gradient-to-r from-sky-400 to-sky-600 px-4 py-4 text-base font-bold text-white shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait"
+                    className="cursor-pointer w-full rounded-xl bg-gradient-to-r from-sky-400 to-sky-600 px-4 py-4 text-base font-bold text-white shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait"
                   >
                       {isSubmitting ? (
                         <>
