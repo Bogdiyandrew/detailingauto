@@ -32,7 +32,7 @@ const services = [
   },
   { 
     id: 'deepclean', 
-    name: 'Deep', 
+    name: 'Deep clean', 
     description: 'Scoate mizeria din tapițerie și dă luciu',
     icon: <Sparkle className="w-6 h-6 sm:w-8 sm:h-8" />,
     color: 'from-purple-400 to-purple-600'
