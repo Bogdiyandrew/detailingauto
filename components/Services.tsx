@@ -1,31 +1,32 @@
 'use client'; 
 
-import { Check, Star } from 'lucide-react';
-import { motion, Variants } from 'framer-motion';
+import { useState } from 'react';
+import { Check, Star } from 'lucide-react'; // Am scos Sparkles din import
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
+// --- DATELE PACHETELOR ---
 const servicesData = [
-  // ... datele tale rămân la fel ...
   {
-    title: 'Pachet 1',
-    subtitle: 'Descriere nr1',
+    title: 'Refresh',
+    subtitle: 'Perfect pentru întreținere lunară',
     price: '300',
     features: [
       'Spălare exterioară',
       'Aspirare interior',
       'Ștergere praf',
       'Curățare geamuri',
-      'Dressing anvelope',
+      'Dressing anvelope'
     ],
     isFeatured: false,
   },
   {
-    title: 'Pachet 2',
-    subtitle: 'Descriere nr2',
+    title: 'Deep clean',
+    subtitle: 'Scoate mizeria din tapițerie și dă luciu',
     price: '400',
     features: [
       'Tot ce include Pachet 1',
-      'Curățare tapițerie (injecție-extracție)',
+      'Curățare tapițerie',
       'Polish one-step',
       'Decontaminare vopsea',
       'Tratament hidrofob parbriz',
@@ -33,13 +34,13 @@ const servicesData = [
     isFeatured: true,
   },
   {
-    title: 'Pachet 3',
-    subtitle: 'Descriere nr3',
+    title: 'Reset total',
+    subtitle: 'O aducem cât mai aproape de starea de fabrică',
     price: '800',
     features: [
       'Tot ce include Pachet 2',
-      'Corecție lac (Polish 2-3 pași)',
-      'Protecție Ceramică 2 ani',
+      'Scăpăm de zgârieturi',
+      'Protecție ceramică',
       'Detailing compartiment motor',
       'Igienizare cu Ozon',
     ],
@@ -47,26 +48,80 @@ const servicesData = [
   },
 ];
 
-const cardVariants: Variants = {
-  hidden: { 
-    opacity: 0, 
-    y: 50 // Am mărit puțin distanța pentru un efect mai clar
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { 
-      duration: 0.6, // Puțin mai lent pentru fluiditate
-      ease: "easeOut"
+// --- COMPONENTA CARD ---
+const PricingCard = ({ service, onClick }: { service: typeof servicesData[0], onClick: () => void }) => (
+  <div className={`
+    group relative flex flex-col justify-between h-full rounded-3xl p-8 
+    transition-all duration-300 overflow-hidden
+    ${service.isFeatured 
+      ? 'bg-white/10 ring-2 ring-brand-accent shadow-[0_0_40px_-10px_rgba(59,130,246,0.4)] z-10' 
+      : 'bg-white/5 ring-1 ring-white/10 hover:bg-white/[0.07]'
     }
-  }
-};
+  `}>
+    
+    {/* Efect de strălucire la hover */}
+    <div className="absolute inset-0 bg-gradient-to-br from-brand-accent/0 via-brand-accent/0 to-brand-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
+    {service.isFeatured && (
+      <>
+        {/* Eticheta Recomandat */}
+        <div className="absolute -top-4 left-0 right-0 mx-auto w-max px-4 py-1 rounded-full bg-brand-accent text-xs font-bold text-white shadow-lg flex items-center justify-center gap-1 z-20">
+          <Star size={12} fill="white" /> RECOMANDAT
+        </div>
+        {/* Glow dinamic */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-brand-accent/20 blur-[50px] rounded-full pointer-events-none group-hover:bg-brand-accent/30 transition-colors" />
+      </>
+    )}
+
+    <div className="relative z-10">
+      <div className="flex justify-between items-start">
+        <h3 className={`text-2xl font-bold ${service.isFeatured ? 'text-white' : 'text-gray-100'}`}>
+          {service.title}
+        </h3>
+        {/* Am scos Sparkles de aici */}
+      </div>
+      
+      <p className="mt-2 text-sm text-gray-400 min-h-[40px] leading-relaxed">{service.subtitle}</p>
+      
+      <div className="mt-6 flex items-baseline gap-1">
+        <span className="text-5xl font-extrabold text-white tracking-tight">{service.price}</span>
+        <span className="text-sm font-semibold text-gray-400">RON</span>
+      </div>
+
+      <div className="mt-8 h-px w-full bg-white/10" />
+
+      <ul className="mt-8 space-y-4 text-sm text-gray-300">
+        {service.features.map((feature, idx) => (
+          <li key={idx} className="flex gap-3 items-start">
+            <div className={`mt-0.5 rounded-full p-0.5 ${service.isFeatured ? 'bg-brand-accent/20' : 'bg-white/10'}`}>
+              <Check className={`h-3.5 w-3.5 ${service.isFeatured ? 'text-brand-accent' : 'text-gray-400'}`} />
+            </div>
+            <span className="leading-tight">{feature}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <button
+      onClick={onClick}
+      className={`relative z-10 mt-8 w-full rounded-xl py-3.5 text-sm font-bold transition-all duration-300 active:scale-95
+        ${service.isFeatured 
+          ? 'bg-brand-accent text-white shadow-lg shadow-brand-accent/25 hover:bg-blue-500 hover:shadow-brand-accent/40' 
+          : 'bg-white/10 text-white hover:bg-white/20 hover:text-white'
+        }
+      `}
+    >
+      Vreau pachetul ăsta
+    </button>
+  </div>
+);
+
+// --- COMPONENTA PRINCIPALĂ ---
 const Services = () => {
   const router = useRouter();
-  
+  const [activeTab, setActiveTab] = useState(1);
+
   const handleSelectPackage = (serviceTitle: string) => {
-    // ... logica ta rămâne la fel ...
     const contactSection = document.getElementById('contact');
     const newUrl = `${window.location.pathname}#contact?service=${encodeURIComponent(serviceTitle)}`;
     window.history.pushState({}, '', newUrl);
@@ -83,114 +138,102 @@ const Services = () => {
   };
 
   return (
-    <section id="servicii" className="relative bg-brand-dark py-24 overflow-hidden">
+    <section id="servicii" className="relative bg-[#0B0B0F] py-20 lg:py-32 overflow-hidden">
       
-      {/* Background elements ... */}
-      <motion.div 
-        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-accent/10 rounded-full blur-[80px] pointer-events-none" 
-      />
-      <motion.div 
-        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[80px] pointer-events-none" 
-      />
+      {/* 1. BACKGROUND TEXTURE (Carbon Fiber / Diagonal Lines) */}
+      <div className="absolute inset-0 z-0 opacity-[0.03]" 
+           style={{ 
+             backgroundImage: 'repeating-linear-gradient(45deg, #ffffff 0px, #ffffff 1px, transparent 1px, transparent 12px)',
+             backgroundSize: '100% 100%' 
+           }}>
+      </div>
+      
+      {/* 2. VIGNETTE (Estompare margini) */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0B0B0F] via-transparent to-[#0B0B0F]" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#0B0B0F] via-transparent to-[#0B0B0F]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl text-center mb-16">
+      {/* 3. LUMINI AMBIENTALE - Mai difuze */}
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-brand-accent/5 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 lg:px-8">
+        
+        {/* Header Text */}
+        <div className="mx-auto max-w-4xl text-center mb-10 lg:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="mt-2 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+            <h2 className="text-3xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
               Alege ce i se potrivește <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-white">mașinii tale</span>
-            </p>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-400">
-              Fără costuri ascunse. Folosim doar soluții de top și nu ne grăbim. Calitatea cere timp.
+            </h2>
+            <p className="mx-auto max-w-2xl text-base lg:text-lg leading-relaxed text-gray-400">
+              Fără costuri ascunse. Folosim doar soluții de top și nu ne grăbim. <br className="hidden md:block"/> Calitatea cere timp.
             </p>
           </motion.div>
         </div>
 
-        <div className="isolate mx-auto grid max-w-md grid-cols-1 gap-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          {servicesData.map((service, index) => (
-            <motion.div
-              key={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              // MODIFICARE IMPORTANTA: 
-              // Am scos margin-ul negativ mare care cauza probleme pe mobil.
-              // amount: 0.1 înseamnă că animația pornește când 10% din element e vizibil.
-              viewport={{ once: true, amount: 0.1 }}
-              
-              // MODIFICARE IMPORTANTA AICI JOS:
-              // 1. Am scos 'transition-all duration-300 will-change-transform'
-              // 2. Am păstrat doar clasele de styling static.
-              className={`
-                relative flex flex-col justify-between rounded-3xl p-8 xl:p-10
-                ${service.isFeatured 
-                  ? 'bg-white/10 ring-2 ring-brand-accent shadow-2xl shadow-brand-accent/20 z-10' 
-                  : 'bg-white/5 ring-1 ring-white/10'
-                }
-              `}
-              // Dacă vrei efect de hover, folosește Framer Motion, nu CSS, pentru a evita conflictul
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              {service.isFeatured && (
-                <div className="absolute -top-5 left-0 right-0 mx-auto w-40 rounded-full bg-gradient-to-r from-brand-accent to-blue-600 px-3 py-1 text-center text-sm font-bold text-white shadow-lg flex items-center justify-center gap-1">
-                  <Star size={14} fill="white" />
-                  Recomandat
-                </div>
-              )}
-
-              <div>
-                <div className="flex items-center justify-between gap-x-4">
-                  <h3 className={`text-xl font-bold leading-8 ${service.isFeatured ? 'text-white' : 'text-gray-100'}`}>
-                    {service.title}
-                  </h3>
-                </div>
-                
-                <p className="mt-4 text-sm leading-6 text-gray-400">
-                  {service.subtitle}
-                </p>
-                
-                <p className="mt-6 flex items-baseline gap-x-1">
-                  <span className={`text-4xl font-bold tracking-tight ${service.isFeatured ? 'text-white' : 'text-gray-100'}`}>
-                    {service.price}
-                  </span>
-                  <span className="text-sm font-semibold leading-6 text-gray-400">RON</span>
-                </p>
-
-                <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-300">
-                  {service.features.map((feature, idx) => (
-                    <li key={idx} className="flex gap-x-3">
-                      <Check className={`h-6 w-5 flex-none ${service.isFeatured ? 'text-brand-accent' : 'text-gray-500'}`} aria-hidden="true" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+        {/* --- MOBIL (TABS) --- */}
+        <div className="lg:hidden">
+          <div className="flex p-1.5 mb-8 bg-black/40 rounded-2xl border border-white/10 backdrop-blur-md">
+            {servicesData.map((service, index) => (
               <button
-                onClick={() => handleSelectPackage(service.title)}
-                // Aici la buton poți lăsa transition-all pentru că butonul nu e animat de Framer Motion
+                key={index}
+                onClick={() => setActiveTab(index)}
                 className={`
-                  mt-8 block w-full rounded-xl py-3 px-3 text-center text-sm font-bold leading-6 focus-visible:outline-2 focus-visible:outline-offset-2 transition-transform duration-200 active:scale-95
-                  ${service.isFeatured
-                    ? 'bg-brand-accent text-white hover:bg-blue-500 shadow-lg shadow-brand-accent/25 focus-visible:outline-brand-accent hover:scale-105'
-                    : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white'
+                  flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300
+                  ${activeTab === index 
+                    ? 'bg-brand-accent text-white shadow-lg' 
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
                   }
                 `}
               >
-                Vreau pachetul ăsta
+                {service.title}
               </button>
+            ))}
+          </div>
+
+          <div className="relative min-h-[550px]"> 
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                transition={{ duration: 0.3 }}
+                className="h-full"
+              >
+                <PricingCard 
+                  service={servicesData[activeTab]} 
+                  onClick={() => handleSelectPackage(servicesData[activeTab].title)} 
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* --- DESKTOP (GRID) --- */}
+        <div className="hidden lg:grid lg:grid-cols-3 lg:gap-8 items-start">
+          {servicesData.map((service, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.15, duration: 0.5 }}
+              className={index === 1 ? 'lg:-mt-4 lg:mb-4' : ''}
+            >
+              <PricingCard 
+                service={service} 
+                onClick={() => handleSelectPackage(service.title)} 
+              />
             </motion.div>
           ))}
         </div>
+
       </div>
     </section>
   );

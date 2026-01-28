@@ -8,17 +8,17 @@ const statsData = [
   {
     icon: <SprayCan className="h-8 w-8 text-brand-accent" />,
     value: "Produse pro",
-    label: "Descriere",
+    label: "Nu folosim soluții ieftine.",
   },
   {
     icon: <CarFront className="h-8 w-8 text-brand-accent" />,
     value: "+400",
-    label: "Mașini finalizate",
+    label: "Mașini finalizate, clienți mulțumiți care revin",
   },
   {
     icon: <Gem className="h-8 w-8 text-brand-accent" />,
     value: "Atenție la detalii",
-    label: "Nu ne grăbim",
+    label: "Nu ne grăbim. Calitatea cere timp",
   },
 ];
 

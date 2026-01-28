@@ -20,6 +20,7 @@ const comparisons = [
   },
 ];
 
+// --- COMPONENTA SLIDER (NESCHIMBATĂ) ---
 const ComparisonSlider = ({ before, after, title, description }: { before: string, after: string, title: string, description: string }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -51,9 +52,9 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
   }, []);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 relative z-10">
       <div 
-        className="relative h-[300px] w-full select-none overflow-hidden rounded-2xl border border-white/10 shadow-2xl sm:h-[450px]"
+        className="relative h-[300px] w-full select-none overflow-hidden rounded-2xl border border-white/10 shadow-2xl sm:h-[450px] group"
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -87,26 +88,26 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
         </div>
 
         <div 
-          className="absolute inset-y-0 z-20 w-1 cursor-ew-resize bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+          className="absolute inset-y-0 z-20 w-1 cursor-ew-resize bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]"
           style={{ left: `${sliderPosition}%` }}
         >
-          <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-accent shadow-xl ring-4 ring-black/20">
-            <ChevronsLeftRight size={20} />
+          <div className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white text-brand-accent shadow-xl ring-4 ring-black/10 transition-transform group-hover:scale-110">
+            <ChevronsLeftRight size={24} />
           </div>
         </div>
 
-        <div className={`pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 transform transition-opacity duration-500 ${isDragging ? 'opacity-0' : 'opacity-70'}`}>
-          <span className="rounded-full bg-black/50 px-3 py-1 text-xs text-white backdrop-blur-md">
+        <div className={`pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 transform transition-all duration-500 ${isDragging ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+          <span className="rounded-full bg-black/60 border border-white/10 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md shadow-lg">
             Trage stânga-dreapta
           </span>
         </div>
       </div>
 
       <div className="text-center md:text-left px-2">
-        <h3 className="text-xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
+        <h3 className="text-2xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
           {title}
         </h3>
-        <p className="mt-2 text-gray-400 leading-relaxed">
+        <p className="mt-2 text-gray-400 leading-relaxed text-base">
           {description}
         </p>
       </div>
@@ -114,24 +115,47 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
   );
 };
 
+// --- SECȚIUNEA PRINCIPALĂ ---
 const BeforeAfter = () => {
   return (
-    <section id="galerie" className="bg-brand-dark py-24 overflow-hidden relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-6xl max-h-[600px] bg-brand-accent/5 blur-[100px] rounded-full pointer-events-none" />
+    <section id="galerie" className="relative bg-[#0B0B0F] py-32 overflow-hidden">
+      
+      {/* 1. GRID PATTERN */}
+      <div className="absolute inset-0 z-0 opacity-20" 
+           style={{ 
+             backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(to right, #3b82f6 1px, transparent 1px)', 
+             backgroundSize: '50px 50px' 
+           }}>
+      </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center mb-16">
+      {/* 2. VIGNETTE */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0B0B0F] via-transparent to-[#0B0B0F]" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-[#0B0B0F] via-transparent to-[#0B0B0F]" />
+
+      {/* 3. ACCENT GLOWS */}
+      <div className="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-[600px] h-[600px] bg-brand-accent/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-[600px] h-[600px] bg-blue-900/10 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* 4. CONTENT */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+        
+        {/* Header Section */}
+        <div className="mx-auto max-w-3xl text-center mb-20">
           
+          {/* Am șters blocul cu REZULTATE REALE de aici */}
           
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl"
+            className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl mb-6"
           >
             Muncă pe bune, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-white">fără filtre</span>.
+            <span className="relative inline-block">
+              <span className="absolute inset-0 bg-gradient-to-r from-brand-accent to-blue-600 blur-2xl opacity-30"></span>
+              <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-white">fără filtre.</span>
+            </span>
           </motion.h2>
           
           <motion.p 
@@ -139,20 +163,21 @@ const BeforeAfter = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-6 text-lg leading-8 text-gray-400"
+            className="text-lg leading-8 text-gray-400"
           >
-            Uite cum arată o mașină care a trecut pe la noi. Nu edităm pozele, lăsăm rezultatul să vorbească de la sine. Trage de slider stânga-dreapta.
+            Uite cum arată o mașină care a trecut pe la noi. Nu edităm pozele, lăsăm rezultatul să vorbească de la sine. 
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        {/* Sliders Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
           {comparisons.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: index * 0.2 }}
+              transition={{ delay: index * 0.2, duration: 0.7 }}
             >
               <ComparisonSlider {...item} />
             </motion.div>
