@@ -208,34 +208,38 @@ const Hero = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            // MODIFICARE 3: mt-8 pentru o spațiere corectă față de text
-            className="mt-20 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-4 sm:flex-row md:justify-start"
+            // MODIFICARE 1: Am pus 'mt-12' (era mt-6) ca să coboare mai mult
+            className="mt-40 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-5 sm:flex-row md:justify-start"
           >
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            {/* MODIFICARE 2: Am scos 'w-full' de aici */}
+            <div className="flex flex-col w-auto xs:flex-row gap-3 justify-center">
+                
                 <Link
                 href="/#contact"
-                className="group w-full sm:w-auto justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-brand-accent/20 transition-all hover:scale-105 hover:bg-sky-400 hover:shadow-brand-accent/40 focus:outline-none focus:ring-4 focus:ring-brand-accent/30"
+                // MODIFICARE 3: Am scos 'w-full' și am pus 'w-auto min-w-[200px]'. 
+                // Asta îl face compact, dar nu minuscul.
+                className="group w-auto min-w-[200px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
                 >
                 <span className="relative z-10">Programează-te</span>
-                <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                <div className="absolute inset-0 -z-0 translate-y-full bg-white/20 transition-transform duration-300 group-hover:translate-y-0" />
+                <ArrowRight className="relative z-10 h-5 w-5" />
                 </Link>
 
                 <Link
                 href="/#servicii"
-                className="group w-full sm:w-auto justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10"
+                // MODIFICARE 4: La fel și aici, scos 'w-full', pus 'w-auto min-w-[200px]' ca să fie egale
+                className="group w-auto min-w-[200px] justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10 active:scale-95"
                 >
                 Descoperă serviciile
                 </Link>
             </div>
 
-            {/* Social Icons - DOAR PENTRU MOBIL - integrate sub butoane */}
-            <div className="flex gap-4 mt-4 md:hidden">
+            {/* Social Icons - rămân la fel */}
+            <div className="flex gap-6 mt-4 md:hidden opacity-90">
                  <a 
-                  href="https://wa.me/40xxxxxx" 
+                  href="https://wa.me/407xxxxxxxx" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform"
                 >
                   <FontAwesomeIcon icon={faWhatsapp} className="h-5 w-5" />
                 </a>
@@ -244,7 +248,7 @@ const Hero = () => {
                   href="https://www.tiktok.com/@_.diamond.detailing._" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all active:scale-95"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform"
                 >
                   <FontAwesomeIcon icon={faTiktok} className="h-4 w-4" />
                 </a>

@@ -176,7 +176,7 @@ const Header = () => {
                       <div className="p-2 bg-brand-accent/10 rounded-lg">
                         <Gem className="h-5 w-5 text-brand-accent" />
                       </div>
-                      <span className="font-bold text-lg text-white tracking-wide">MENU</span>
+                      <span className="font-bold text-lg text-white tracking-wide">MENIU</span>
                    </div>
                   <button 
                     onClick={() => setIsMenuOpen(false)} 
