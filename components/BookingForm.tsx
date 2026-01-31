@@ -166,7 +166,7 @@ const BookingFormContent = () => {
             <PartyPopper className="h-12 w-12 text-white" />
             </div>
         </div>
-        <h3 className="text-3xl font-bold text-white mb-2">Programare Trimisă!</h3>
+        <h3 className="text-3xl font-bold text-white mb-2">Programare trimisă!</h3>
         <p className="text-gray-400 max-w-xs mx-auto text-sm leading-relaxed mb-8">
           Te vom contacta telefonic în cel mai scurt timp pentru confirmarea finală a pachetului {selectedService}.
         </p>
@@ -445,7 +445,7 @@ const BookingFormContent = () => {
                         </>
                       ) : (
                         <>
-                            <span>Confirmă Programarea</span>
+                            <span>Confirmă programarea</span>
                             <Check className="h-5 w-5" />
                         </>
                       )}
