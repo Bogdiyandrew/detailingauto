@@ -89,7 +89,6 @@ const Footer = () => {
                 <Clock className="h-5 w-5 text-brand-accent mt-0.5 flex-shrink-0" />
                 <div className="flex flex-col">
                   <span>Luni - Vineri: 08:00 - 16:00</span>
-                  <span>Sâmbătă: 09:00 - 14:00</span>
                 </div>
               </li>
             </ul>
