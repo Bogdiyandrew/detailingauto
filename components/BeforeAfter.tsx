@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ChevronsLeftRight } from 'lucide-react'; 
 
+// --- DATELE PENTRU SLIDER ---
 const comparisons = [
   {
     before: '/before-1.jpg',
@@ -20,12 +21,13 @@ const comparisons = [
   },
 ];
 
-// --- COMPONENTA SLIDER (NESCHIMBATĂ) ---
+// --- COMPONENTA SLIDER INDIVIDUALĂ ---
 const ComparisonSlider = ({ before, after, title, description }: { before: string, after: string, title: string, description: string }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Funcția care calculează poziția
   const handleMove = useCallback((clientX: number) => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
@@ -37,14 +39,18 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
 
   const handleMouseDown = () => setIsDragging(true);
   const handleMouseUp = () => setIsDragging(false);
+  
+  // Mouse move (Desktop)
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) handleMove(e.clientX);
   };
   
+  // Touch move (Mobil) - funcționează direct
   const handleTouchMove = (e: React.TouchEvent) => {
     handleMove(e.touches[0].clientX);
   };
 
+  // Oprește dragging-ul global dacă utilizatorul dă drumul la mouse în afara elementului
   useEffect(() => {
     const stopDragging = () => setIsDragging(false);
     window.addEventListener('mouseup', stopDragging);
@@ -54,12 +60,16 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
   return (
     <div className="flex flex-col gap-6 relative z-10">
       <div 
-        className="relative h-[300px] w-full select-none overflow-hidden rounded-2xl border border-white/10 shadow-2xl sm:h-[450px] group"
+        // FIX CRITIC: 'touch-none' previne scroll-ul paginii când dai cu degetul pe slider
+        className="relative h-[300px] w-full select-none overflow-hidden rounded-2xl border border-white/10 shadow-2xl sm:h-[450px] group touch-none"
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onTouchMove={handleTouchMove}
+        // onTouchStart asigură că sliderul "sare" la deget din prima atingere
+        onTouchStart={(e) => handleMove(e.touches[0].clientX)}
       >
+        {/* Imaginea DUPĂ (Fundal) */}
         <Image
           src={after}
           alt="Dupa detailing"
@@ -71,6 +81,7 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
           DUPĂ
         </div>
 
+        {/* Imaginea ÎNAINTE (Deasupra, decupată) */}
         <div 
           className="absolute inset-0 h-full w-full"
           style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
@@ -87,6 +98,7 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
           </div>
         </div>
 
+        {/* Linia Verticală și Butonul */}
         <div 
           className="absolute inset-y-0 z-20 w-1 cursor-ew-resize bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]"
           style={{ left: `${sliderPosition}%` }}
@@ -96,13 +108,15 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
           </div>
         </div>
 
-        <div className={`pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 transform transition-all duration-500 ${isDragging ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
+        {/* Indicator vizual pentru utilizatori (dispare la interacțiune) */}
+        <div className={`pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 transform transition-all duration-500 ${sliderPosition !== 50 || isDragging ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
           <span className="rounded-full bg-black/60 border border-white/10 px-4 py-1.5 text-xs font-medium text-white backdrop-blur-md shadow-lg">
             Trage stânga-dreapta
           </span>
         </div>
       </div>
 
+      {/* Descrierea sub slider */}
       <div className="text-center md:text-left px-2">
         <h3 className="text-2xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
           {title}
@@ -115,7 +129,7 @@ const ComparisonSlider = ({ before, after, title, description }: { before: strin
   );
 };
 
-// --- SECȚIUNEA PRINCIPALĂ ---
+// --- SECȚIUNEA PRINCIPALĂ (WRAPPER) ---
 const BeforeAfter = () => {
   return (
     <section id="galerie" className="relative bg-[#0B0B0F] py-32 overflow-hidden">
@@ -136,14 +150,11 @@ const BeforeAfter = () => {
       <div className="absolute top-0 left-0 -translate-x-1/4 -translate-y-1/4 w-[600px] h-[600px] bg-brand-accent/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-[600px] h-[600px] bg-blue-900/10 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* 4. CONTENT */}
+      {/* 4. CONȚINUT */}
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         
         {/* Header Section */}
         <div className="mx-auto max-w-3xl text-center mb-20">
-          
-          {/* Am șters blocul cu REZULTATE REALE de aici */}
-          
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -169,7 +180,7 @@ const BeforeAfter = () => {
           </motion.p>
         </div>
 
-        {/* Sliders Grid */}
+        {/* Lista de Slidere */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
           {comparisons.map((item, index) => (
             <motion.div
