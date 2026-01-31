@@ -360,7 +360,7 @@ const BookingFormContent = () => {
             <ArrowLeft size={16} /> Înapoi
           </button>
 
-          <h3 className="text-2xl font-bold text-white mb-6">Date Contact</h3>
+          <h3 className="text-2xl font-bold text-white mb-6">Date contact</h3>
 
           <div className="bg-gradient-to-br from-white/10 to-white/5 p-4 rounded-2xl border border-white/10 mb-6 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-3 opacity-10">
