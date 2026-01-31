@@ -4,10 +4,9 @@ import { useState, FormEvent, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/style.css'; 
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { ro } from 'date-fns/locale';
 import { 
-  Clock, 
   User, 
   LoaderCircle, 
   PartyPopper, 
@@ -18,35 +17,48 @@ import {
   Sparkle, 
   ArrowLeft, 
   Check,
-  AlertCircle // Iconita pentru eroare
+  AlertCircle,
+  PhoneCall, 
 } from 'lucide-react';
 
-// --- DATE SERVICII ---
+// --- 1. CONFIGURARE CAPACITATE ---
+const MAX_DAILY_CAPACITY = 8; // Capacitatea ta maximă de muncă pe zi (puncte/ore)
+
+// --- DATE SERVICII CU COST DE TIMP ---
 const services = [
   { 
     id: 'refresh', 
     name: 'Refresh', 
     description: 'Perfect pentru întreținere lunarǎ',
     icon: <CarFront className="w-6 h-6 sm:w-8 sm:h-8" />,
-    color: 'from-blue-400 to-blue-600'
+    color: 'from-blue-400 to-blue-600',
+    durationCost: 2 // Ocupă puțin (2 puncte din 8)
   },
   { 
     id: 'deepclean', 
     name: 'Deep clean', 
     description: 'Scoate mizeria din tapițerie și dă luciu',
     icon: <Sparkle className="w-6 h-6 sm:w-8 sm:h-8" />,
-    color: 'from-purple-400 to-purple-600'
+    color: 'from-purple-400 to-purple-600',
+    durationCost: 4 // Ocupă jumătate de zi (4 puncte din 8)
   },
   { 
     id: 'reset', 
     name: 'Reset total', 
     description: 'O aducem cât mai aproape de starea de fabrică',
     icon: <Gem className="w-6 h-6 sm:w-8 sm:h-8" />,
-    color: 'from-emerald-400 to-emerald-600'
+    color: 'from-emerald-400 to-emerald-600',
+    durationCost: 8 // Ocupă TOATĂ ZIUA (8 puncte din 8)
   },
 ];
 
-const availableTimes = ['09:00', '11:00', '13:00', '15:00', '17:00'];
+// --- SIMULARE BAZĂ DE DATE (PROGRAMĂRI EXISTENTE) ---
+// Aici simulăm că ai deja treabă în anumite zile.
+// În realitate, datele astea vin din backend-ul tău.
+const existingBookings = [
+  { date: addDays(new Date(), 2), usedCapacity: 4 }, // Peste 2 zile ai deja 4 ore ocupate
+  { date: addDays(new Date(), 5), usedCapacity: 8 }, // Peste 5 zile e FULL (8 ore ocupate)
+];
 
 const BookingFormContent = () => {
   const searchParams = useSearchParams();
@@ -56,11 +68,10 @@ const BookingFormContent = () => {
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
-  // State-uri pentru formular si validare
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
@@ -77,7 +88,7 @@ const BookingFormContent = () => {
         
         setStep(currentStep => {
             if (currentStep === 1) {
-                setSelectedDate(new Date());
+                // Nu setam data default ca să obligăm userul să aleagă conștient
                 return 2;
             }
             return currentStep;
@@ -88,7 +99,7 @@ const BookingFormContent = () => {
 
   const handleServiceSelect = (serviceName: string) => {
     setSelectedService(serviceName);
-    setSelectedDate(new Date());
+    setSelectedDate(undefined); // Resetăm data când schimbă serviciul
     setStep(2);
     const params = new URLSearchParams(searchParams);
     params.set('service', serviceName);
@@ -107,7 +118,6 @@ const BookingFormContent = () => {
     setStep(1);
     setSelectedService(null);
     setSelectedDate(undefined);
-    setSelectedTime(null);
     setSubmissionStatus('idle');
     setName('');
     setPhoneNumber('');
@@ -126,6 +136,27 @@ const BookingFormContent = () => {
     const limitedNumbers = numbersOnly.slice(0, 10);
     setPhoneNumber(limitedNumbers);
     if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined }));
+  };
+
+  // --- LOGICĂ CAPACITATE (CALCUL ZILE DISPONIBILE) ---
+  const getDisabledDates = () => {
+    const activeService = services.find(s => s.name === selectedService);
+    const serviceCost = activeService ? activeService.durationCost : 0;
+    
+    // FIX: Definim explicit tipul array-ului pentru a accepta atât obiecte { before: Date } cât și obiecte Date simple
+    const disabledDates: (Date | { before: Date })[] = [{ before: new Date() }];
+
+    existingBookings.forEach(booking => {
+        // Cât ar fi totalul dacă adăugăm serviciul curent?
+        const totalLoad = booking.usedCapacity + serviceCost;
+        
+        // Dacă depășește capacitatea ta maximă, blocăm ziua
+        if (totalLoad > MAX_DAILY_CAPACITY) {
+            disabledDates.push(booking.date);
+        }
+    });
+
+    return disabledDates;
   };
 
   const validateForm = () => {
@@ -147,11 +178,12 @@ const BookingFormContent = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-        return; // Oprește execuția dacă sunt erori
+        return; 
     }
 
     setIsSubmitting(true);
     // Simulare request API
+    // Payload acum va fi: { service, date, name, phone } (fără oră)
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsSubmitting(false);
     setSubmissionStatus('success');
@@ -166,15 +198,25 @@ const BookingFormContent = () => {
             <PartyPopper className="h-12 w-12 text-white" />
             </div>
         </div>
-        <h3 className="text-3xl font-bold text-white mb-2">Programare trimisă!</h3>
-        <p className="text-gray-400 max-w-xs mx-auto text-sm leading-relaxed mb-8">
-          Te vom contacta telefonic în cel mai scurt timp pentru confirmarea finală a pachetului {selectedService}.
-        </p>
+        <h3 className="text-3xl font-bold text-white mb-4">Cerere Înregistrată!</h3>
+        
+        {/* Mesaj educational pentru client */}
+        <div className="bg-white/5 p-5 rounded-2xl border border-white/10 max-w-sm mx-auto mb-8 text-left shadow-lg">
+            <h4 className="text-sky-400 font-bold text-base mb-3 flex items-center gap-2">
+              <PhoneCall size={18}/> Ce urmează?
+            </h4>
+            <ul className="text-gray-300 text-sm space-y-2.5 list-disc pl-4 leading-relaxed">
+              <li>Aceasta este o <strong>cerere de rezervare</strong> pentru data aleasă.</li>
+              <li>Te vom contacta telefonic pentru a stabili <strong>ora exactă</strong> de predare.</li>
+              <li>Programul este flexibil pentru a asigura calitatea maximă a lucrării.</li>
+            </ul>
+        </div>
+
         <button
           onClick={resetForm}
           className="cursor-pointer rounded-xl bg-white/10 px-8 py-3 text-sm font-semibold text-white hover:bg-white/20 transition-all border border-white/5 active:scale-95"
         >
-          Fă o altă programare
+          Înapoi la servicii
         </button>
       </div>
     );
@@ -248,7 +290,7 @@ const BookingFormContent = () => {
         </div>
       )}
       
-      {/* --- STEP 2: CALENDAR & TIME --- */}
+      {/* --- STEP 2: CALENDAR ONLY (FARA ORE) --- */}
       {step === 2 && (
         <div className="flex-1 flex flex-col animate-in slide-in-from-right-8 fade-in duration-300">
           
@@ -275,14 +317,29 @@ const BookingFormContent = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto custom-scrollbar">
-            <div className="bg-gradient-to-b from-white/5 to-transparent rounded-2xl border border-white/5 p-4 mb-6 flex justify-center w-full">
+            
+            {/* MESAJ INFORMATIV DESPRE FLEXIBILITATE */}
+            <div className="mb-6 p-4 rounded-xl bg-sky-500/10 border border-sky-500/20 flex gap-3 items-start">
+               <div className="p-2 bg-sky-500/20 rounded-lg shrink-0 mt-0.5">
+                  <PhoneCall className="w-5 h-5 text-sky-400" />
+               </div>
+               <div>
+                 <h4 className="text-sm font-bold text-white mb-1">Program flexibil</h4>
+                 <p className="text-xs text-gray-300 leading-relaxed">
+                   Tu alegi ziua, noi ne ocupăm de restul. O să te sunăm după ce trimiți cererea ca să stabilim la ce oră ne vedem, ca să nu ne încurcăm în program.
+                 </p>
+               </div>
+            </div>
+
+            <div className="bg-gradient-to-b from-white/5 to-transparent rounded-2xl border border-white/5 p-4 mb-2 flex justify-center w-full">
               
               <DayPicker
                 mode="single"
                 selected={selectedDate}
                 onSelect={setSelectedDate}
                 locale={ro}
-                disabled={{ before: new Date() }}
+                // FOLOSIM FUNCTIA DE CAPACITATE AICI
+                disabled={getDisabledDates()} 
                 fromDate={new Date()}
                 showOutsideDays
                 classNames={{
@@ -310,36 +367,14 @@ const BookingFormContent = () => {
                     }
                 }}
               />
-
-            </div>
-            
-            <div className="mb-4">
-              <p className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                <Clock size={16} className="text-sky-400" />
-                Disponibilitate {selectedDate ? format(selectedDate, 'dd MMMM', { locale: ro }) : ''}
-              </p>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3">
-                {availableTimes.map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`cursor-pointer py-2.5 rounded-lg text-sm font-bold border transition-all duration-200 ${
-                      selectedTime === time 
-                        ? 'bg-sky-400 text-white border-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.4)] scale-105' 
-                        : 'bg-white/5 text-gray-400 border-white/5 hover:border-white/20 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-white/5">
             <button 
               onClick={() => setStep(3)} 
-              disabled={!selectedDate || !selectedTime} 
+              // Butonul depinde acum doar de DATA, nu și de oră
+              disabled={!selectedDate} 
               className="cursor-pointer group w-full relative overflow-hidden rounded-xl bg-sky-400 px-4 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-400/20 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
@@ -366,7 +401,7 @@ const BookingFormContent = () => {
               <div className="absolute top-0 right-0 p-3 opacity-10">
                  <Gem size={80} className="text-white" />
               </div>
-              <div className="relative space-y-2">
+              <div className="relative space-y-3">
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold bg-sky-400/20 text-sky-400 px-2 py-1 rounded uppercase tracking-wider">Serviciu</span>
                     <span className="text-sm font-semibold text-white">{selectedService}</span>
@@ -374,13 +409,20 @@ const BookingFormContent = () => {
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-bold bg-purple-500/20 text-purple-400 px-2 py-1 rounded uppercase tracking-wider">Data</span>
                     <span className="text-sm font-semibold text-white capitalize">
-                        {selectedDate ? format(selectedDate, 'eee, dd MMMM', { locale: ro }) : ''}, {selectedTime}
+                        {selectedDate ? format(selectedDate, 'eee, dd MMMM', { locale: ro }) : ''}
                     </span>
+                  </div>
+                  {/* INFORMARE ORA */}
+                  <div className="flex items-center gap-3">
+                     <span className="text-xs font-bold bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded uppercase tracking-wider">Ora</span>
+                     <span className="text-xs italic text-gray-400 flex items-center gap-1">
+                        Se confirmă telefonic
+                     </span>
                   </div>
               </div>
           </div>
 
-          {/* Adaugat noValidate pentru a dezactiva mesajele browserului */}
+          {/* Formular Contact */}
           <form className="flex-1 flex flex-col gap-4" onSubmit={handleFormSubmit} noValidate>
                <div className="space-y-1.5">
                   <label htmlFor="name" className="text-xs font-bold text-gray-400 uppercase ml-1">Nume Complet</label>
@@ -445,7 +487,7 @@ const BookingFormContent = () => {
                         </>
                       ) : (
                         <>
-                            <span>Confirmă programarea</span>
+                            <span>Trimite Cerere Programare</span>
                             <Check className="h-5 w-5" />
                         </>
                       )}
