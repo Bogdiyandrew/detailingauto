@@ -259,7 +259,7 @@ const Hero = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
       >
-        <a href="https://wa.me/40xxxxxx" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110">
+        <a href="https://api.whatsapp.com/send/?phone=40773940475&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110">
           <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
         </a>
         <a href="https://www.tiktok.com/@_.diamond.detailing._" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110">

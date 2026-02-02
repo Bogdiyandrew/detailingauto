@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="flex gap-4">
               <SocialLink href="https://www.instagram.com/_.diamond.detailing._/" icon={faInstagram} label="Instagram" />
               <SocialLink href="https://www.tiktok.com/@_.diamond.detailing._" icon={faTiktok} label="TikTok" />
-              <SocialLink href="https://wa.me/40700000000" icon={faWhatsapp} label="WhatsApp" />
+              <SocialLink href="https://api.whatsapp.com/send/?phone=40773940475&text&type=phone_number&app_absent=0" icon={faWhatsapp} label="WhatsApp" />
               <SocialLink href="#" icon={faFacebook} label="Facebook" />
             </div>
           </div>
@@ -79,7 +79,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-brand-accent flex-shrink-0" />
-                <a href="tel:+40700000000" className="hover:text-white transition-colors">07xx xxx xxx</a>
+                <a href="tel:+40700000000" className="hover:text-white transition-colors">0773 940 475</a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-brand-accent flex-shrink-0" />

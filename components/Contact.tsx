@@ -46,13 +46,13 @@ const Contact = () => {
 
             <div className="flex flex-col gap-6">
               {/* Card Telefon */}
-              <a href="tel:+40700000000" className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-brand-accent/50 transition-all duration-300 backdrop-blur-md">
+              <a href="https://api.whatsapp.com/send/?phone=40773940475&text&type=phone_number&app_absent=0" className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-brand-accent/50 transition-all duration-300 backdrop-blur-md">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-accent/10 text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
                   <Phone size={20} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-400 font-medium">Telefon & WhatsApp</p>
-                  <p className="text-lg font-semibold text-white">07xx xxx xxx</p>
+                  <p className="text-lg font-semibold text-white">0773 940 475</p>
                 </div>
               </a>
 
