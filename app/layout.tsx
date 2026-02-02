@@ -20,9 +20,9 @@ export const metadata: Metadata = {
   keywords: ['detailing auto', 'pitesti', 'polish', 'curatare auto', 'cosmetica auto'],
   icons: {
     icon: [
-      { url: '/logo.png', type: 'image/png' }, // Forțează browserul să știe că e PNG
+      { url: '/logonoutest.png', type: 'image/png' }, // Forțează browserul să știe că e PNG
     ],
-    apple: '/logo.png',
+    apple: '/logonoutest.png',
   },
 };
 // -----------------------------
