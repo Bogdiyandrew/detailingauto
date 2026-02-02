@@ -143,21 +143,26 @@ const BookingFormContent = () => {
     const activeService = services.find(s => s.name === selectedService);
     const serviceCost = activeService ? activeService.durationCost : 0;
     
-    // FIX: Definim explicit tipul array-ului pentru a accepta atât obiecte { before: Date } cât și obiecte Date simple
+    // Începem cu blocarea zilelor din trecut
     const disabledDates: (Date | { before: Date })[] = [{ before: new Date() }];
 
     existingBookings.forEach(booking => {
-        // Cât ar fi totalul dacă adăugăm serviciul curent?
         const totalLoad = booking.usedCapacity + serviceCost;
         
-        // Dacă depășește capacitatea ta maximă, blocăm ziua
+        // Luăm ziua lunii (ex: 4, 7, 15)
+        const dayOfMonth = booking.date.getDate();
+
+        // LOGICĂ: Dacă totalul depășește capacitatea, blocăm ziua, 
+        // DAR verificăm să NU fie ziua de 4 sau 7.
         if (totalLoad > MAX_DAILY_CAPACITY) {
-            disabledDates.push(booking.date);
+            if (dayOfMonth !== 4 && dayOfMonth !== 7) {
+                disabledDates.push(booking.date);
+            }
         }
     });
 
     return disabledDates;
-  };
+};
 
   const validateForm = () => {
     const newErrors: { name?: string; phone?: string } = {};
