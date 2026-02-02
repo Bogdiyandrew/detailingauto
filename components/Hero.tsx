@@ -51,7 +51,11 @@ const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, 
       className={className}
     >
       {words.map((word, index) => (
-        <motion.span variants={child} key={index} className="mr-[0.25em] last:mr-0 inline-block py-1">
+        <motion.span 
+          variants={child} 
+          key={index} 
+          className="mr-[0.25em] last:mr-0 inline-block py-1 drop-shadow-md" // MODIFICARE: Adăugat drop-shadow-md
+        >
           {word}
         </motion.span>
       ))}
@@ -62,7 +66,7 @@ const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, 
 // --- Componenta Principală Hero ---
 const Hero = () => {
   const targetRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null); // Ref pentru video
+  const videoRef = useRef<HTMLVideoElement>(null); 
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
@@ -72,7 +76,6 @@ const Hero = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
-    // Forțăm pornirea video-ului
     if (videoRef.current) {
       videoRef.current.play().catch(() => console.log("Autoplay blocked"));
     }
@@ -153,13 +156,16 @@ const Hero = () => {
             <source src="/videotel.mov" type="video/mp4" />
             <source src="/videotel.mov" type="video/quicktime" />
           </video>
+          {/* MODIFICARE: Overlay mai puternic pentru mobil pentru a citi textul mai ușor */}
+          <div className="absolute inset-0 bg-black/40 z-[1]" />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/80 via-black/50 to-transparent md:bg-gradient-to-r md:from-black/80 md:via-black/40 md:to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/90" />
+        {/* MODIFICARE: Gradient overlay optimizat pentru contrast pe ambele moduri */}
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-black/40 to-transparent md:bg-gradient-to-r md:from-black/90 md:via-black/40 md:to-transparent z-[2]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/95 z-[2]" />
       </motion.div>
 
-      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-12 md:mt-0">
+      <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-6 md:mt-0">
         <div className="flex flex-col items-center md:items-start max-w-4xl">
           
           <div className="mb-6 md:mb-8 w-full flex flex-col items-center md:items-start">
@@ -167,7 +173,7 @@ const Hero = () => {
               <AnimatedText 
                 text="Mașina ta, din nou" 
                 isMobile={isMobile}
-                className="text-3xl font-medium tracking-wide text-white/90 md:text-6xl lg:text-7xl mb-[-5px] md:mb-[-15px] w-full"
+                className="text-3xl font-medium tracking-wide text-white md:text-6xl lg:text-7xl mb-[-5px] md:mb-[-15px] w-full drop-shadow-lg" // MODIFICARE: text-white/90 -> text-white + drop-shadow-lg
               />
             </div>
             
@@ -176,7 +182,7 @@ const Hero = () => {
                  initial={{ opacity: 0, scale: 0.8 }}
                  whileInView={{ opacity: 1, scale: 1 }}
                  transition={{ delay: 0.5, duration: 1.5 }}
-                 className="absolute left-1/2 md:left-1/3 top-1/2 -z-10 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/20 blur-[50px] md:blur-[60px]"
+                 className="absolute left-1/2 md:left-1/3 top-1/2 -z-10 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/30 blur-[60px] md:blur-[80px]" // MODIFICARE: Blur mai mare pentru "halo"
               />
 
               <motion.h1
@@ -188,7 +194,8 @@ const Hero = () => {
                   transition: { delay: 0.4, duration: 0.8, type: "spring", bounce: 0.4 } 
                 }}
                 viewport={{ once: true }}
-                className="text-5xl xs:text-6xl md:text-8xl lg:text-[7rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-sky-300 to-sky-600 drop-shadow-[0_0_15px_rgba(14,165,233,0.3)] md:drop-shadow-[0_0_25px_rgba(14,165,233,0.4)] py-2 md:py-4 leading-[1.1]"
+                // MODIFICARE: Adăugat drop-shadow manual mai agresiv pentru contrast pe video
+                className="text-4xl xs:text-5xl md:text-8xl lg:text-[7rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-sky-400 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] py-2 md:py-4 leading-[1.1]"
               >
                 CA ÎN PRIMA ZI
               </motion.h1>
@@ -203,24 +210,24 @@ const Hero = () => {
             className="flex flex-col items-center md:items-start gap-4 w-full"
           >
             <div className="hidden md:block h-[2px] w-12 bg-sky-500/50" />
-            <p className="mb-6 md:mb-8 max-w-xl text-base md:text-xl font-light leading-relaxed text-slate-300 text-center md:text-left">
-              Detailing auto profesional în <span className="text-white font-medium">Pitești</span>. 
+            {/* MODIFICARE: Adăugat font-normal și text-white pe span pentru lizibilitate maximă */}
+            <p className="mt-10 mb-5 md:mb-8 max-w-xl text-base md:text-xl font-normal leading-relaxed text-white drop-shadow-md text-center md:text-left">
+              Detailing auto profesional în <span className="text-sky-400 font-bold">Pitești</span>. 
               Curățare în profunzime, polish și protecție ceramică.
             </p>
           </motion.div>
           
-          {/* Am adăugat mt-12 pentru mobil și mt-8 pentru desktop ca să fie mai jos */}
           <motion.div
             variants={buttonVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-25 md:mt-8 flex flex-col w-full sm:w-auto items-center justify-center gap-5 sm:flex-row md:justify-start"
+            className="mt-15 md:mt-6 flex flex-col w-full sm:w-auto items-center justify-center gap-5 sm:flex-row md:justify-start"
           >
             <div className="flex flex-col w-auto xs:flex-row gap-3 justify-center">
                 <Link
                   href="/#contact"
-                  className="group w-auto min-w-[200px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
+                  className="group w-auto min-w-[220px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-4 text-base font-bold text-white shadow-xl shadow-sky-500/40 transition-all hover:scale-105 active:scale-95" // MODIFICARE: Shadow mai vizibil
                 >
                   <span className="relative z-10">Programează-te</span>
                   <ArrowRight className="relative z-10 h-5 w-5" />
@@ -228,18 +235,18 @@ const Hero = () => {
 
                 <Link
                   href="/#servicii"
-                  className="group w-auto min-w-[200px] justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10 active:scale-95"
+                  className="group w-auto min-w-[220px] justify-center flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95" // MODIFICARE: Backdrop blur mai intens
                 >
                   Descoperă serviciile
                 </Link>
             </div>
 
-            <div className="flex gap-6 mt-4 md:hidden opacity-90">
-                 <a href="https://wa.me/407xxxxxxxx" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform">
-                  <FontAwesomeIcon icon={faWhatsapp} className="h-5 w-5" />
+            <div className="flex gap-8 mt-10 md:hidden"> {/* MODIFICARE: Distanțare mai mare pentru iconițe pe mobil */}
+                 <a href="https://wa.me/407xxxxxxxx" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md active:scale-90 shadow-lg">
+                  <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
                 </a>
-                <a href="https://www.tiktok.com/@_.diamond.detailing._" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform">
-                  <FontAwesomeIcon icon={faTiktok} className="h-4 w-4" />
+                <a href="https://www.tiktok.com/@_.diamond.detailing._" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md active:scale-90 shadow-lg">
+                  <FontAwesomeIcon icon={faTiktok} className="h-5 w-5" />
                 </a>
             </div>
           </motion.div>
