@@ -62,6 +62,7 @@ const AnimatedText = ({ text, className, isMobile, delay = 0 }: { text: string, 
 // --- Componenta Principală Hero ---
 const Hero = () => {
   const targetRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null); // Ref pentru video
   const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
@@ -70,6 +71,12 @@ const Hero = () => {
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
+    
+    // Forțăm pornirea video-ului
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => console.log("Autoplay blocked"));
+    }
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -119,7 +126,6 @@ const Hero = () => {
       ref={targetRef} 
       className="relative flex min-h-[100dvh] flex-col justify-center items-center md:items-start overflow-hidden bg-brand-dark pb-10 pt-20 md:pb-0 md:pt-0"
     >
-      {/* Background Parallax */}
       <motion.div 
         style={{ y, scale }}
         className="absolute inset-0 z-0 will-change-transform"
@@ -133,24 +139,27 @@ const Hero = () => {
           quality={90}
           sizes="100vw"
         />
-        <Image
-          src="/HEROMOB.jpeg"
-          alt="Interior auto curățat profesional"
-          fill
-          className="block object-cover object-bottom md:hidden"
-          priority
-          quality={70} 
-          sizes="100vh"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/80 via-black/40 to-transparent md:bg-gradient-to-r md:from-black/80 md:via-black/40 md:to-transparent" />
+
+        <div className="relative h-full w-full md:hidden bg-black">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          >
+            <source src="/videotel.mov" type="video/mp4" />
+            <source src="/videotel.mov" type="video/quicktime" />
+          </video>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/80 via-black/50 to-transparent md:bg-gradient-to-r md:from-black/80 md:via-black/40 md:to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/90" />
       </motion.div>
 
-      {/* MODIFICARE 1: mt-12 pe mobil (în loc de -5vh) 
-         Asta împinge conținutul mai jos, sub zona de logo/header 
-      */}
       <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-12 md:mt-0">
-        
         <div className="flex flex-col items-center md:items-start max-w-4xl">
           
           <div className="mb-6 md:mb-8 w-full flex flex-col items-center md:items-start">
@@ -163,7 +172,6 @@ const Hero = () => {
             </div>
             
             <div className="relative w-full text-center md:text-left">
-              {/* Glow Effect */}
               <motion.div 
                  initial={{ opacity: 0, scale: 0.8 }}
                  whileInView={{ opacity: 1, scale: 1 }}
@@ -194,92 +202,60 @@ const Hero = () => {
             viewport={{ once: true }}
             className="flex flex-col items-center md:items-start gap-4 w-full"
           >
-            {/* MODIFICARE 2: Linia este 'hidden' pe mobil și 'block' pe desktop */}
             <div className="hidden md:block h-[2px] w-12 bg-sky-500/50" />
-            
             <p className="mb-6 md:mb-8 max-w-xl text-base md:text-xl font-light leading-relaxed text-slate-300 text-center md:text-left">
               Detailing auto profesional în <span className="text-white font-medium">Pitești</span>. 
               Curățare în profunzime, polish și protecție ceramică.
             </p>
           </motion.div>
           
+          {/* Am adăugat mt-12 pentru mobil și mt-8 pentru desktop ca să fie mai jos */}
           <motion.div
             variants={buttonVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            // MODIFICARE 1: Am pus 'mt-12' (era mt-6) ca să coboare mai mult
-            className="mt-40 md:mt-0 flex flex-col w-full sm:w-auto items-center justify-center gap-5 sm:flex-row md:justify-start"
+            className="mt-25 md:mt-8 flex flex-col w-full sm:w-auto items-center justify-center gap-5 sm:flex-row md:justify-start"
           >
-            {/* MODIFICARE 2: Am scos 'w-full' de aici */}
             <div className="flex flex-col w-auto xs:flex-row gap-3 justify-center">
-                
                 <Link
-                href="/#contact"
-                // MODIFICARE 3: Am scos 'w-full' și am pus 'w-auto min-w-[200px]'. 
-                // Asta îl face compact, dar nu minuscul.
-                className="group w-auto min-w-[200px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
+                  href="/#contact"
+                  className="group w-auto min-w-[200px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-brand-accent px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-sky-500/20 transition-all hover:scale-105 active:scale-95"
                 >
-                <span className="relative z-10">Programează-te</span>
-                <ArrowRight className="relative z-10 h-5 w-5" />
+                  <span className="relative z-10">Programează-te</span>
+                  <ArrowRight className="relative z-10 h-5 w-5" />
                 </Link>
 
                 <Link
-                href="/#servicii"
-                // MODIFICARE 4: La fel și aici, scos 'w-full', pus 'w-auto min-w-[200px]' ca să fie egale
-                className="group w-auto min-w-[200px] justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10 active:scale-95"
+                  href="/#servicii"
+                  className="group w-auto min-w-[200px] justify-center flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/10 active:scale-95"
                 >
-                Descoperă serviciile
+                  Descoperă serviciile
                 </Link>
             </div>
 
-            {/* Social Icons - rămân la fel */}
             <div className="flex gap-6 mt-4 md:hidden opacity-90">
-                 <a 
-                  href="https://wa.me/407xxxxxxxx" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform"
-                >
+                 <a href="https://wa.me/407xxxxxxxx" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform">
                   <FontAwesomeIcon icon={faWhatsapp} className="h-5 w-5" />
                 </a>
-                
-                <a 
-                  href="https://www.tiktok.com/@_.diamond.detailing._" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform"
-                >
+                <a href="https://www.tiktok.com/@_.diamond.detailing._" target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md active:scale-90 transition-transform">
                   <FontAwesomeIcon icon={faTiktok} className="h-4 w-4" />
                 </a>
             </div>
-
           </motion.div>
         </div>
       </div>
 
-      {/* Social Icons - DOAR PENTRU DESKTOP - Poziționare absolută */}
       <motion.div 
         className="hidden md:flex absolute bottom-10 left-10 z-20 gap-4"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
       >
-        <a 
-          href="https://wa.me/40xxxxxx" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110"
-        >
+        <a href="https://wa.me/40xxxxxx" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-[#25D366] hover:border-[#25D366] hover:scale-110">
           <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
         </a>
-        
-        <a 
-          href="https://www.tiktok.com/@_.diamond.detailing._" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110"
-        >
+        <a href="https://www.tiktok.com/@_.diamond.detailing._" target="_blank" rel="noopener noreferrer" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white backdrop-blur-md transition-all hover:bg-black hover:border-white/20 hover:scale-110">
           <FontAwesomeIcon icon={faTiktok} className="h-5 w-5" />
         </a>
       </motion.div>

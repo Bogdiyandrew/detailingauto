@@ -427,7 +427,6 @@ const BookingFormContent = () => {
               </div>
           </div>
 
-          {/* Formular Contact */}
           <form className="flex-1 flex flex-col gap-4" onSubmit={handleFormSubmit} noValidate>
                <div className="space-y-1.5">
                   <label htmlFor="name" className="text-xs font-bold text-gray-400 uppercase ml-1">Nume Complet</label>
