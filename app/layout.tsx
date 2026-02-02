@@ -19,7 +19,9 @@ export const metadata: Metadata = {
   description: 'Servicii profesionale de detailing auto interior și exterior în Pitești. Polish, curățare tapițerie, protecție ceramică.',
   keywords: ['detailing auto', 'pitesti', 'polish', 'curatare auto', 'cosmetica auto'],
   icons: {
-    icon: '/logo.png',
+    icon: [
+      { url: '/logo.png', type: 'image/png' }, // Forțează browserul să știe că e PNG
+    ],
     apple: '/logo.png',
   },
 };
