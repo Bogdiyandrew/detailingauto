@@ -153,8 +153,8 @@ const Hero = () => {
             preload="auto"
             className="absolute inset-0 h-full w-full object-cover object-center"
           >
-            <source src="/videotel.mov" type="video/mp4" />
-            <source src="/videotel.mov" type="video/quicktime" />
+            <source src="/videotel.mp4" type="video/mp4" />
+            <source src="/videotel.mp4" type="video/quicktime" />
           </video>
           {/* MODIFICARE: Overlay mai puternic pentru mobil pentru a citi textul mai ușor */}
           <div className="absolute inset-0 bg-black/40 z-[1]" />
