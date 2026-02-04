@@ -132,7 +132,7 @@ const Hero = () => {
             poster="/HEROMOB.jpeg" // FOARTE IMPORTANT: Creează această imagine mică!
             className="absolute inset-0 h-full w-full object-cover object-center"
           >
-            <source src="/videotel.mp4" type="video/mp4" />
+            <source src="/vdtel.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-black/45 z-[1]" />
         </div>
