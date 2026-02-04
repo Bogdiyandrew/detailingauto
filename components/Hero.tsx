@@ -45,7 +45,7 @@ const AnimatedText = ({ text, className, delay = 0 }: { text: string, className?
         display: "flex", 
         flexWrap: "wrap", 
         // Folosim clase CSS pentru aliniere responsive în loc de JS
-        justifyContent: "center",
+        justifyContent: "flex-start",
       }}
       className={`${className} md:justify-start`} // Tailwind se ocupă de responsive
       variants={container}
