@@ -125,7 +125,7 @@ const Hero = () => {
       <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-6 md:mt-0">
         <div className="flex flex-col items-center md:items-start max-w-4xl">
           
-          <div className="mb-6 md:mb-8 w-full flex flex-col items-center md:items-start">
+          <div className="mb-5 md:mb-8 w-full flex flex-col items-center md:items-start">
             {/* Aliniere Mașina ta, din nou */}
             <AnimatedText 
               text="Mașina ta, din nou" 
@@ -177,7 +177,7 @@ const Hero = () => {
             className="mt-4 flex flex-col w-full items-center justify-center md:items-start"
           >
             {/* Butoane centrate pe mobil, stânga pe desktop */}
-            <div className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 w-full md:w-fit">
+            <div className="mt-5 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 w-full md:w-fit">
                 <Link
                   href="/#contact"
                   className="group w-fit min-w-[220px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-sky-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-sky-900/20 transition-all active:scale-95 hover:bg-sky-500"
