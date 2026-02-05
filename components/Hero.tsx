@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useSpring, Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -41,7 +40,6 @@ const AnimatedText = ({ text, className, delay = 0 }: { text: string, className?
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      // flex-start pe desktop, center pe mobile
       className={`${className} flex flex-wrap justify-center md:justify-start w-full`}
     >
       {words.map((word, index) => (
@@ -71,8 +69,8 @@ const Hero = () => {
     restDelta: 0.001
   });
 
-  const y = useTransform(smoothProgress, [0, 1], ["0%", "40%"]);
-  const scale = useTransform(smoothProgress, [0, 1], [1, 1.05]);
+  const y = useTransform(smoothProgress, [0, 1], ["0%", "30%"]);
+  const scale = useTransform(smoothProgress, [0, 1], [1, 1.1]);
 
   const buttonVariants: Variants = {
     hidden: { opacity: 0, y: 15 },
@@ -86,25 +84,14 @@ const Hero = () => {
   return (
     <section 
       ref={targetRef} 
-      className="relative flex min-h-[100dvh] flex-col justify-center items-center md:items-start overflow-hidden bg-brand-dark pb-10 pt-20 md:pb-0 md:pt-0"
+      className="relative flex min-h-[100dvh] flex-col justify-center items-center md:items-start overflow-hidden bg-black pb-10 pt-20 md:pb-0 md:pt-0"
     >
       <motion.div 
         style={{ y, scale }}
         className="absolute inset-0 z-0 will-change-transform"
       >
-        <div className="hidden md:block absolute inset-0">
-          <Image
-            src="/hero-desktop.jpeg"
-            alt="Interior auto curățat profesional"
-            fill
-            className="object-cover"
-            priority={true}
-            quality={80}
-            sizes="100vw"
-          />
-        </div>
-
-        <div className="block md:hidden absolute inset-0 bg-black">
+        {/* Video Background activ pe ambele (Mobile + Desktop) */}
+        <div className="absolute inset-0 bg-black">
           <video
             autoPlay
             muted
@@ -115,18 +102,20 @@ const Hero = () => {
           >
             <source src="/vdtel.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-black/45 z-[1]" />
+          
+          {/* Strat de întunecare pentru contrast */}
+          <div className="absolute inset-0 bg-black/40 z-[1]" />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-black/40 to-transparent md:bg-gradient-to-r md:from-black/95 md:via-black/30 md:to-transparent z-[2]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-dark/95 z-[2]" />
+        {/* Gradiente pentru lizibilitate (Varianta A: Cinematic) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/30 to-transparent hidden md:block z-[2]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/95 z-[2]" />
       </motion.div>
 
       <div className="relative z-10 w-full max-w-[1400px] px-6 md:px-16 lg:px-24 mx-auto mt-6 md:mt-0">
         <div className="flex flex-col items-center md:items-start max-w-4xl">
           
           <div className="mb-5 md:mb-8 w-full flex flex-col items-center md:items-start">
-            {/* Aliniere Mașina ta, din nou */}
             <AnimatedText 
               text="Mașina ta, din nou" 
               className="text-3xl font-medium tracking-wide text-white md:text-6xl lg:text-7xl mb-[-5px] md:mb-[-15px] drop-shadow-lg"
@@ -137,7 +126,7 @@ const Hero = () => {
                  initial={{ opacity: 0 }}
                  whileInView={{ opacity: 1 }}
                  transition={{ delay: 0.5, duration: 1 }}
-                 className="absolute left-1/2 md:left-1/3 top-1/2 -z-10 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/20 blur-[50px] md:blur-[80px]"
+                 className="absolute left-1/2 md:left-0 top-1/2 -z-10 h-[100%] w-[100%] -translate-x-1/2 md:translate-x-0 -translate-y-1/2 rounded-full bg-sky-500/20 blur-[60px] md:blur-[100px]"
               />
 
               <motion.h1
@@ -148,7 +137,7 @@ const Hero = () => {
                   transition: { delay: 0.3, duration: 0.6 } 
                 }}
                 viewport={{ once: true }}
-                className="text-4xl xs:text-5xl md:text-8xl lg:text-[7rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-sky-400 drop-shadow-xl py-2 md:py-4 leading-[1.1]"
+                className="text-4xl xs:text-5xl md:text-8xl lg:text-[7.5rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-sky-400 drop-shadow-xl py-2 md:py-4 leading-[1.1]"
               >
                 CA ÎN PRIMA ZI
               </motion.h1>
@@ -163,7 +152,7 @@ const Hero = () => {
             className="flex flex-col items-center md:items-start gap-4 w-full"
           >
             <div className="hidden md:block h-[2px] w-12 bg-sky-500/50" />
-            <p className="mt-6 mb-8 md:mb-10 max-w-xl text-base md:text-xl font-normal leading-relaxed text-white drop-shadow-md text-center md:text-left px-4 md:px-0">
+            <p className="mt-6 mb-8 md:mb-10 max-w-xl text-base md:text-xl font-light leading-relaxed text-gray-100 drop-shadow-md text-center md:text-left px-4 md:px-0">
               Detailing auto profesional în <span className="text-sky-400 font-bold">Pitești</span>. 
               Curățare în profunzime, polish și protecție ceramică.
             </p>
@@ -176,14 +165,13 @@ const Hero = () => {
             viewport={{ once: true }}
             className="mt-4 flex flex-col w-full items-center justify-center md:items-start"
           >
-            {/* Butoane centrate pe mobil, stânga pe desktop */}
             <div className="mt-5 flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 w-full md:w-fit">
                 <Link
                   href="/#contact"
                   className="group w-fit min-w-[220px] justify-center relative flex items-center gap-2 overflow-hidden rounded-full bg-sky-600 px-8 py-4 text-base font-bold text-white shadow-lg shadow-sky-900/20 transition-all active:scale-95 hover:bg-sky-500"
                 >
                   <span className="relative z-10">Programează-te</span>
-                  <ArrowRight className="relative z-10 h-5 w-5" />
+                  <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Link>
 
                 <Link
@@ -194,8 +182,8 @@ const Hero = () => {
                 </Link>
             </div>
 
-            <div className="flex gap-10 mt-10 md:hidden">
-                 <a href="https://wa.me/407xxxxxxxx" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-sm active:scale-90 shadow-lg">
+            <div className="flex gap-10 mt-10 md:hidden relative z-10">
+                 <a href="https://wa.me/40773940475" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-sm active:scale-90 shadow-lg">
                   <FontAwesomeIcon icon={faWhatsapp} className="h-6 w-6" />
                 </a>
                 <a href="https://www.tiktok.com/@_.diamond.detailing._" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-sm active:scale-90 shadow-lg">
@@ -207,7 +195,7 @@ const Hero = () => {
       </div>
 
       <motion.div 
-        className="hidden md:flex absolute bottom-10 left-10 z-20 gap-4"
+        className="hidden md:flex absolute bottom-10 right-10 z-20 gap-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
