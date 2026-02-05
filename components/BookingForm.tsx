@@ -331,7 +331,7 @@ const BookingFormContent = () => {
                <div>
                  <h4 className="text-sm font-bold text-white mb-1">Program flexibil</h4>
                  <p className="text-xs text-gray-300 leading-relaxed">
-                   Tu alegi ziua, noi ne ocupăm de restul. O să te sunăm după ce trimiți cererea ca să stabilim la ce oră ne vedem, ca să nu ne încurcăm în program.
+                   Tu alegi ziua, noi îți rezervăm locul. Te contactăm în cel mai scurt timp pentru confirmarea orei, astfel încât vizita ta să fie prioritară și fără timp de așteptare.
                  </p>
                </div>
             </div>
