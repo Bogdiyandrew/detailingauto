@@ -94,7 +94,7 @@ const Hero = () => {
       >
         <div className="hidden md:block absolute inset-0">
           <Image
-            src="/HERODESK.jpeg"
+            src="/hero-desktop.jpeg"
             alt="Interior auto curățat profesional"
             fill
             className="object-cover"
@@ -110,7 +110,7 @@ const Hero = () => {
             muted
             loop
             playsInline
-            poster="/HEROMOB.jpeg"
+            poster="/mobile.jpeg"
             className="absolute inset-0 h-full w-full object-cover object-center"
           >
             <source src="/vdtel.mp4" type="video/mp4" />
